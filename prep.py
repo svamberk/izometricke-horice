@@ -202,7 +202,7 @@ def line(g, c, w, block=False):
 LU = {'residential': 'garden', 'garden': 'garden', 'grass': 'park', 'park': 'park', 'village_green': 'park',
       'recreation_ground': 'park', 'meadow': 'meadow', 'farmland': 'farmland', 'allotments': 'garden',
       'cemetery': 'cemetery', 'pitch': 'pitch', 'track': 'track', 'playground': 'sand', 'stadium': 'pitch',
-      'school': 'paved', 'kindergarten': 'garden', 'industrial': 'industrial', 'garages': 'industrial',
+      'school': 'park', 'kindergarten': 'garden', 'industrial': 'industrial', 'garages': 'industrial',
       'commercial': 'paved', 'retail': 'paved', 'pedestrian': 'cobble', 'plaza': 'cobble',
       'construction': 'construction', 'railway': 'dirt', 'barracks': 'industrial', 'downhill': 'piste', 'ski_jump': 'skijump'}
 NOTREE_LU = {'pitch', 'track', 'playground', 'stadium', 'school', 'industrial', 'garages', 'commercial',
@@ -267,20 +267,30 @@ ZORNA = [g for r in ZAB['orna'] + [ZAB['ttp'][i] for i in sorted(_pole)] for g i
 ZSAD = [g for g in map(_zpoly, ZAB['sad']) if g.intersects(_zb)]
 for g in ZTTP: fill(g, C['meadow'])
 CROPS = ['wheat'] * 4 + ['rape'] * 2 + ['maize'] * 2 + ['soil'] * 2
+HON = 320.0                                     # lány nad 30 ha se dělí na hony (pásy napříč delší osou), každý s vlastní plodinou
 for g in ZORNA:
+    # plodina, směr řádků i hony podle celého pole (ne podle kusu v tomto čtverci), aby pole na švu čtverců navazovalo
+    o = g.minimum_rotated_rectangle; oc = list(o.exterior.coords)[:4]
+    e1 = np.subtract(oc[1], oc[0]); e2 = np.subtract(oc[2], oc[1])
+    if np.linalg.norm(e1) < np.linalg.norm(e2): e1, e2 = e2, e1
+    u = e1 / np.linalg.norm(e1)
+    if u[0] < 0 or (u[0] == 0 and u[1] < 0): u = -u              # stejná orientace ve všech čtvercích
+    v = np.array([-u[1], u[0]]); c0 = np.array(g.centroid.coords[0]); key0 = wkey(c0[0] + CX, c0[1] + CY)
     for p in polys(g.intersection(DRAWBOX)):
         if p.area < 400: continue
-        cr = CROPS[int(h01(wkey(p.centroid.x + CX, p.centroid.y + CY) + 'pole') * len(CROPS))]
-        fill(p, C[cr])
-        o = p.minimum_rotated_rectangle; oc = list(o.exterior.coords)[:4]
-        e1 = np.subtract(oc[1], oc[0]); e2 = np.subtract(oc[2], oc[1])
-        if np.linalg.norm(e1) < np.linalg.norm(e2): e1, e2 = e2, e1
-        u = e1 / np.linalg.norm(e1); v = np.array([-u[1], u[0]]); c0 = np.array(p.centroid.coords[0]); R_ = math.hypot(*np.subtract(p.bounds[2:], p.bounds[:2]))
-        k = -R_
-        while k < R_:                                # řádky po 2 m
-            l = LineString([tuple(c0 + v * k - u * R_), tuple(c0 + v * k + u * R_)]).intersection(p)
-            if not l.is_empty: line(l, C[cr + '2'], 0.6)
-            k += 2.0
+        pc = np.array(p.exterior.coords) - c0; pu_, pv_ = pc @ u, pc @ v
+        strips = range(math.floor(pu_.min() / HON), math.ceil(pu_.max() / HON)) if g.area > 300000 else [None]
+        for si in strips:
+            q = p if si is None else p.intersection(Polygon([tuple(c0 + u * si * HON + v * (pv_.min() - 1)), tuple(c0 + u * (si + 1) * HON + v * (pv_.min() - 1)),
+                                                             tuple(c0 + u * (si + 1) * HON + v * (pv_.max() + 1)), tuple(c0 + u * si * HON + v * (pv_.max() + 1))]))
+            if q.is_empty or q.area < 100: continue
+            cr = CROPS[int(h01(key0 + 'pole' + ('' if si is None else str(si))) * len(CROPS))]
+            fill(q, C[cr])
+            k = math.floor(pv_.min() / 2.0) * 2.0
+            while k < pv_.max():                         # řádky po 2 m na mřížce celého pole
+                l = LineString([tuple(c0 + v * k + u * (pu_.min() - 1)), tuple(c0 + v * k + u * (pu_.max() + 1))]).intersection(q)
+                if not l.is_empty: line(l, C[cr + '2'], 0.6)
+                k += 2.0
 
 inf = load('infrastructure')
 parkings = []
@@ -295,15 +305,20 @@ for _, r in inf.iterrows():
 for q in UP['paved']: fill(Polygon([to_local(lo, la) for la, lo in q]), C['paved'], block=True)
 
 wat = load('water')
+WET = set(geo.MESTO.get('voda_mokrad', []))   # vodní plochy, které jsou podle ortofota zarostlé (Overture id z mesto.json)
 for _, r in wat.iterrows():
     g = r.geom
     if g.geom_type in ('Polygon', 'MultiPolygon'):
-        if r['class'] == 'swimming_pool': fill(g, C['pool'], outline=C['pool_edge'], block=True)
+        if r['id'] in WET: fill(g, C['wetland'])
+        elif r['class'] == 'swimming_pool': fill(g, C['pool'], outline=C['pool_edge'], block=True)
         else: fill(g, C['water'], block=True)
     elif r['class'] == 'river':          # jen řeky; potoky v datech často vedou pod domy (zatrubněné) a ve skutečnosti nejsou vidět
         line(g, C['stream'], 6, block=True)
 
 seg = load('segment')
+# dálnice ve výstavbě se nekreslí (staveniště je vidět ve využití území)
+_uc = lambda r: r['class'] == 'motorway' and any('is_under_construction' in list(f.get('values')) for f in (r.road_flags if r.road_flags is not None else []))
+seg = seg[[not _uc(r) for _, r in seg.iterrows()]].reset_index(drop=True)
 TUNNEL_MIN = 60.0     # kratší „tunel“ je podjezd pod silnicí nebo tratí: kreslí se jako cesta, nad ní vede most
 def tunnel_parts(r):
     """části segmentu mimo tunel (0..1); dlouhé tunely se nekreslí, silnice je pod zemí"""
@@ -354,13 +369,13 @@ for _, r in seg.iterrows():
         if isb and g.length >= BRIDGE_MIN: bridge_segs.append((g, r)); continue
         q = r.copy(); q['geom'] = g; _rows.append(q)
 seg = pd.DataFrame(_rows).reset_index(drop=True)
-RW = {'trunk': 12, 'primary': 10, 'secondary': 9, 'tertiary': 8, 'residential': 6, 'unclassified': 6,
+RW = {'motorway': 18, 'trunk': 12, 'primary': 10, 'secondary': 9, 'tertiary': 8, 'residential': 6, 'unclassified': 6,
       'living_street': 5, 'service': 3.6, 'pedestrian': 4, 'track': 3, 'footway': 1.8, 'path': 1.6,
       'cycleway': 2, 'steps': 2, 'bridleway': 1.6, 'unknown': 3}
 def rwidth(r):
     """šířka silnice: RW je obousměrná; jednosměrný pás dvoupásové silnice ~60 %, sjezd (link) jeden pruh 5 m"""
     w = RW.get(r['class'], 3)
-    if r['class'] not in ('trunk', 'primary', 'secondary', 'tertiary'): return w
+    if r['class'] not in ('motorway', 'trunk', 'primary', 'secondary', 'tertiary'): return w
     if str(r.get('subclass')) == 'link': return min(w, 5.0)
     acc = r.get('access_restrictions')
     oneway = acc is not None and not isinstance(acc, float) and any(
@@ -368,7 +383,7 @@ def rwidth(r):
     return round(w * 0.6, 1) if oneway else w
 RCLS = {'track': 'dirt', 'path': 'dirt', 'bridleway': 'dirt', 'footway': 'footway', 'cycleway': 'footway',
         'steps': 'paved', 'pedestrian': 'cobble'}
-DRIVE = {'trunk', 'primary', 'secondary', 'tertiary', 'residential', 'unclassified', 'living_street', 'service'}
+DRIVE = {'motorway', 'trunk', 'primary', 'secondary', 'tertiary', 'residential', 'unclassified', 'living_street', 'service'}
 roads = []
 for _, r in seg.iterrows():
     c = r['class']
@@ -515,7 +530,7 @@ for _, g, c, w, _n in roads:
     line(g, C[RCLS.get(c, 'road')], w, block=w >= 3)
 # středová přerušovaná čára
 for _, g, c, w, _n in roads:
-    if c in ('trunk', 'primary', 'secondary', 'tertiary'):
+    if c in ('trunk', 'primary', 'secondary', 'tertiary') or (c == 'motorway' and w >= 7):     # dálnice: čára mezi pruhy, ne na sjezdu
         for l in lines(g.intersection(AREA)):
             d = 0.0
             while d < l.length - 3:
@@ -524,7 +539,7 @@ for _, g, c, w, _n in roads:
 
 drive_lines = [(l, w, c, n) for _, g, c, w, n in roads if c in DRIVE for l in lines(g)]
 # kanály (poklopy) a stopčáry u vjezdu na důležitější silnici
-RANK = {'service': 0, 'living_street': 1, 'residential': 2, 'unclassified': 2, 'tertiary': 3, 'secondary': 4, 'primary': 5, 'trunk': 6}
+RANK = {'service': 0, 'living_street': 1, 'residential': 2, 'unclassified': 2, 'tertiary': 3, 'secondary': 4, 'primary': 5, 'trunk': 6, 'motorway': 7}
 nodes_rank = {}
 for l, w, c, n in drive_lines:
     for pt in (l.coords[0], l.coords[-1]):
@@ -643,6 +658,7 @@ ROOF_P = [(168, 68, 47), (150, 60, 44), (142, 58, 42), (107, 59, 47), (74, 74, 8
 ROOF_F = [(141, 141, 141), (122, 122, 122), (156, 154, 146), (110, 112, 116)]
 PITCHED_CLS = {'church', 'house', 'detached', 'semidetached_house', 'residential', 'terrace', 'farm', 'chapel', 'bungalow',
                'villa', 'cabin', 'religious', 'civic', 'hut', 'barn', 'farm_auxiliary', 'kindergarten', 'allotment_house'}
+FARM_CLS = {'barn', 'farm_auxiliary', 'cowshed', 'stable', 'sty'}    # stodoly, kravíny: hala s nízkou sedlovou střechou
 FLAT_CLS = {'garage', 'garages', 'apartments', 'industrial', 'warehouse', 'commercial', 'retail', 'school',
             'university', 'hospital', 'office', 'carport', 'parking', 'service', 'transportation', 'sports_hall',
             'sports_centre', 'greenhouse', 'roof'}
@@ -1044,6 +1060,13 @@ for _, r in bld.iterrows():
             elif c in PITCHED_CLS or (not c and 25 < area < 400): rs = 'gabled' if h01(key) < 0.62 else 'hipped'
             else: rs = 'flat'
         if not lm and so.get('r'): rs = so['r']; tenement = panel = False
+        # zemědělské haly a kruhové půdorysy (sila, nádrže, jímky) nejsou činžáky ani paneláky
+        farm = c in FARM_CLS and area > 150 and not lm
+        rnd = not lm and area < 600 and 4 * math.pi * area / p.length ** 2 > 0.88
+        if rnd: rs = 'flat'; tenement = panel = False
+        elif farm:
+            tenement = panel = False
+            if not (r.id in DMP and DMP[r.id][1] - DMP[r.id][0] < 0.3): rs = 'gabled'
         obb = p.minimum_rotated_rectangle
         oc = list(obb.exterior.coords)[:4]
         e1 = np.subtract(oc[1], oc[0]); e2 = np.subtract(oc[2], oc[1])
@@ -1056,6 +1079,7 @@ for _, r in bld.iterrows():
                 if area / max(obb.area, 1) > 0.9 else roof_parts(p, ang)
             if not parts: rs = 'flat'
         roofh = min(max(pp[4] for pp in parts) / 2 * math.tan(math.radians(40)), 7.0) if parts else 0.0
+        if farm or (c in ('industrial', 'warehouse') and area > 400 and not lm): roofh = min(roofh, 3.5)   # velké haly: mírný sklon
         if tenement:
             roofh = min(roofh, 6.5)
             total = (hgt if hgt and hgt > 9 else (floors or (2 if area < 130 else 4)) * 3.2 + 0.6) + roofh * 0.6   # malé řadovky 2 patra
@@ -1077,16 +1101,22 @@ for _, r in bld.iterrows():
         else: style = 0
         if tenement: style = 11
         if panel: style = 1
+        if farm: style = 15
+        if rnd: style = 5
         if r.id in DMP and not dsp and not lm and c not in ('garage', 'garages', 'carport', 'shed', 'roof'):
             med, top = DMP[r.id]
             if panel: med = group_med(p.buffer(0.8), med)   # sekce jednoho paneláku stejně vysoké
             if rs == 'flat': total = eave = med
-            else: total = max(top, med + 1); eave = max(2.2, total - roofh)
+            else:
+                # šikmá střecha: body laseru leží rovnoměrně mezi okapem a hřebenem -> výška střechy ~ 2,5 × (p90 − medián)
+                roofh = min(roofh, max(1.5, 2.5 * (top - med)))
+                total = max(top, med + 1); eave = max(2.2, total - roofh)
         if c == 'roof': style = 12; total = hgt if hgt and hgt < 12 else 4.5; eave = total
         if c in ('retail', 'commercial') and area > 1500 and not tenement: style = 3     # obchodní centra: pásy oken
         pal = TEN_WALLS if style == 11 else PANEL if style == 1 else WALLS
         wc = hexcol(r.facade_color, pal[int(h01((group_key(p.buffer(0.8)) if panel else key) + 'w') * 1000) % len(pal)])
         if style == 2: wc = (196, 190, 178)
+        if rnd: wc = (200, 198, 192)                    # silo / nádrž: beton
         rp = ROOF_F if rs == 'flat' else TEN_ROOFS if tenement else ROOF_P
         rc = hexcol(r.roof_color, rp[int(h01(key + 'r') * 1000) % len(rp)])
         if 'rc' in so and not lm: rc = tuple(so['rc'])
@@ -1130,7 +1160,7 @@ for _, r in bld.iterrows():
             tw = min(31.0, 10 + L * 0.5)
             b['cht'] = [round(min(11.0, 5 + L * 0.15), 1), round(tw, 1), round(tw + min(16.0, 4 + L * 0.3), 1)]
         # technologie a světlíky na velkých plochých střechách (jen městské čtverce)
-        if URBAN and rs == 'flat' and style != 2 and area > 300 and not lm:
+        if URBAN and rs == 'flat' and style != 2 and area > 300 and not lm and not farm and not rnd:
             inner = p.buffer(-2.0)
             if not inner.is_empty:
                 trng = random.Random(key)
@@ -1196,7 +1226,7 @@ for d in DOMS:
          's': 4, 'id': len(buildings), 'lm': 'dom', 'dn': d['name'], 'only': 1, 'tw': []}
     for tw in sp['towers']:
         b['tw'].append({'x': round(x, 2), 'y': round(y, 2), 'a': 0.0, 'w': tw['w'], 'h': round(g + tw['h'], 2), 'to': round(g + tw.get('to', tw['h']), 2),
-                        'top': tw['top'], 'tc': tw.get('tc', [90, 96, 104]), 'wc': [150, 146, 136], 'clock': 0, 'round': tw.get('round', 0),
+                        'top': tw['top'], 'tc': tw.get('tc', [90, 96, 104]), 'wc': list(sp.get('wc', [150, 146, 136])), 'clock': tw.get('clock', 0), 'round': tw.get('round', 0),
                         'stone': tw.get('stone', 0), 'ruin': tw.get('ruin', 0), 'b': round(g - 0.6, 2)})
     if not own: b['gh'] = 1
     buildings.append(b)
@@ -1265,7 +1295,7 @@ for _, r in inf.iterrows():
 lamp_tree = shapely.STRtree(lamp_pts) if lamp_pts else None
 bm_arr = np.asarray(bmask)
 for l, w, c, n in drive_lines:
-    if c == 'service': continue
+    if c in ('service', 'motorway'): continue          # dálnice bez lamp
     d, side = 12.0, 1
     while d < l.length - 5:
         q = l.interpolate(d)
@@ -1275,6 +1305,7 @@ for l, w, c, n in drive_lines:
         x, y = q.x + math.cos(ang + math.pi / 2) * off, q.y + math.sin(ang + math.pi / 2) * off
         px_, py_ = pix(x, y)
         ok = AREA.contains(Point(x, y)) and 0 <= px_ < TWE and 0 <= py_ < TWE and bm_arr[py_, px_] == 0
+        ok = ok and len(btree.query(Point(x, y), predicate='dwithin', distance=40)) > 0   # jen v zástavbě, ne podél silnic v polích a lesích
         if ok and lamp_tree is not None:
             i = lamp_tree.nearest(Point(x, y)); ok = lamp_pts[i].distance(Point(x, y)) > 18
         if ok and not any(abs(x - s[0]) < 12 and abs(y - s[1]) < 12 for s in props['lamp'][-6:]):
@@ -1375,7 +1406,7 @@ for _, r in land.iterrows():
                 q = l.interpolate(d)
                 if EXT_P.contains(q): trees.append((q.x, q.y, 8 + h01('r' + wkey(q.x, q.y)) * 6, 0, 0))
                 d += 7
-DENS = {'park': 11, 'cemetery': 9, 'residential': 16, 'garden': 12, 'grass': 20, 'village_green': 18,
+DENS = {'park': 11, 'cemetery': 9, 'residential': 16, 'garden': 12, 'grass': 20, 'village_green': 18, 'school': 22,
         'recreation_ground': 20, 'allotments': 14, 'kindergarten': 14}
 for _, r in lu.iterrows():
     s = DENS.get(r['class'])
@@ -1405,6 +1436,24 @@ for t in trees:
     seen.add(k); T.append(t)
 tz = ground(np.array([t[0] for t in T]), np.array([t[1] for t in T]))
 trees = [[round(t[0], 2), round(t[1], 2), round(float(z), 2), round(t[2], 1), t[3], t[4]] for t, z in zip(T, tz)]
+# stromy v lese nesmí zakrýt silnici (kamera od JZ pod úhlem geo.EL): strom jihozápadně od silnice se sníží, aby jeho koruna
+# nesahala přes vozovku; když by měl být nižší než 5 m, skryje se (kind 2 – pořadí stromů v seznamu zůstává)
+_rd = [l.buffer(w / 2 + 0.5) for _, g, c, w, _n in roads if c in ('motorway', 'trunk', 'primary', 'secondary', 'tertiary', 'unclassified')
+       for l in lines(g.intersection(EXT.buffer(60)))]
+_fo = [r.geom for _, r in land.iterrows() if r['class'] in ('forest', 'wood') and r.geom.geom_type in ('Polygon', 'MultiPolygon')]
+if _rd and _fo and trees:
+    _rdu = shapely.unary_union(_rd); _fou = shapely.unary_union(_fo).buffer(0); shapely.prepare(_rdu); shapely.prepare(_fou)
+    _k = 1.0 / math.tan(geo.EL); _d = math.sqrt(0.5)
+    _x = np.array([t[0] for t in trees]); _y = np.array([t[1] for t in trees]); _h = np.array([t[3] for t in trees])
+    _reach = _h * _k + 2.5                                         # kam po zemi sahá koruna v pohledu kamery (+ poloměr koruny)
+    _rays = shapely.linestrings(np.stack([np.stack([_x, _y], 1), np.stack([_x + _reach * _d, _y + _reach * _d], 1)], 1))
+    _cand = np.nonzero(shapely.contains_xy(_fou, _x, _y) & shapely.intersects(_rays, _rdu))[0]
+    _dist = shapely.distance(shapely.points(_x[_cand], _y[_cand]), shapely.intersection(_rays[_cand], _rdu))
+    for i, dd in zip(_cand, _dist):
+        hn = (dd - 2.5) / _k
+        if hn < 5: trees[i][5] = 2
+        elif hn < trees[i][3]: trees[i][3] = round(float(hn), 1)
+    print('stromů sníženo/skryto u silnic v lese', len(_cand))
 print('stromů', len(trees))
 
 # ---------------- hřbitovy: hroby, náhrobky, sochy ----------------
@@ -1455,7 +1504,8 @@ for _, r in lu.iterrows():
 for _, r in inf.iterrows():
     g = r.geom
     if r['class'] == 'artwork' and g.geom_type == 'Point' and AREA.contains(g):
-        if any(r2['class'] == 'cemetery' and r2.geom.buffer(3).contains(g) for _, r2 in lu.iterrows()):
+        # sochy na hřbitovech i jinde (Hořice = město soch); bod uvnitř budovy (reliéf, výzdoba) se vynechá
+        if not any(bpolys[i].contains(g) for i in btree.query(g)):
             statues.append([round(g.x, 2), round(g.y, 2), round(float(ground(g.x, g.y)), 2), 0.0])
 props['planter'] = props['slab'] = props['pavilion'] = props['shed'] = []
 props['grave'] = graves
