@@ -15,7 +15,7 @@ assets/zabaged.json
 assets/dmp_vysky.json
 
 # konfigurace tvého města (python novy_mesto.py); ukázka je v priklady/mesto.json
-/mesto.json
+# /mesto.json  (v tomto forku je konfigurace Hořic součástí repozitáře)
 
 # hlášení: vlastní konfigurace a hesla serveru
 /wrangler.jsonc

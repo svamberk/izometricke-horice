@@ -1,0 +1,847 @@
+[
+ {
+  "name": "Kostel Narození Panny Marie",
+  "lat": 50.367033,
+  "lon": 15.63195,
+  "text": "Podle fotek z Wikimedia Commons (2006–2020) a laseru ČÚZK: okrová loď s bílými lizénami a terakotovou střechou (římsa 16,5 m, hřeben 23 m), hranolová věž 8,8 m vestavěná do severní strany lodi s hodinami, římsou ve 31 m a tmavě šedou cibulovou bání s lucernou do 51 m, na východním konci hřebene malý sanktusník.",
+  "spec": {
+   "wc": [
+    226,
+    190,
+    130
+   ],
+   "rc": [
+    166,
+    84,
+    60
+   ],
+   "r": "gabled",
+   "h": 16.5,
+   "win": 4,
+   "towers": [
+    {
+     "at": "pt",
+     "w": 8.8,
+     "h": 31,
+     "top": "helm",
+     "to": 51,
+     "tc": [
+      78,
+      82,
+      88
+     ],
+     "clock": 1
+    },
+    {
+     "at": "along",
+     "t": 0.86,
+     "w": 2.0,
+     "h": 26,
+     "top": "helm",
+     "to": 30,
+     "tc": [
+      78,
+      82,
+      88
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "name": "Radnice",
+  "lat": 50.367554,
+  "lon": 15.632159,
+  "text": "Podle fotek z Wikimedia Commons a laseru ČÚZK: novogotická radnice (1872) se smetanově okrovou fasádou a tmavou břidlicovou valbovou střechou (římsa ~14 m, hřeben ~18 m), z jejíhož středního rizalitu do náměstí vyrůstá tmavá kamenná hranolová věž s hodinami a plochým vrcholem se zábradlím (~21–22 m, fiály ~24 m).",
+  "spec": {
+   "wc": [
+    222,
+    198,
+    158
+   ],
+   "rc": [
+    70,
+    72,
+    78
+   ],
+   "r": "hipped",
+   "h": 14,
+   "rh": 4.3,
+   "win": 8,
+   "face": [
+    50.368,
+    15.63217
+   ],
+   "towers": [
+    {
+     "at": "front",
+     "w": 3.2,
+     "h": 21,
+     "to": 22,
+     "top": "none",
+     "stone": 1,
+     "clock": 1
+    }
+   ]
+  }
+ },
+ {
+  "name": "Radnice – věžička",
+  "lat": 50.367672,
+  "lon": 15.632145,
+  "text": "Podle fotky z Wikimedia Commons: štíhlá tmavá věžička se špičkou na střeše radnice západně za hlavní věží.",
+  "spec": {
+   "only": 1,
+   "towers": [
+    {
+     "at": "c",
+     "w": 1.8,
+     "h": 19.5,
+     "top": "spire",
+     "to": 24.5,
+     "tc": [
+      70,
+      72,
+      78
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "name": "Bývalá spořitelna (MěÚ)",
+  "lat": 50.367462,
+  "lon": 15.632404,
+  "text": "Podle fotek z Wikimedia Commons, ortofota a laseru ČÚZK: novorenesanční bývalá spořitelna (1864, dnes MěÚ) s bílou omítkou a pískovcovým přízemím, římsou ~15 m a tmavě šedou břidlicovou valbovou střechou s hřebenem ~19 m (fotky i ortofoto ukazují světlou fasádu a šedou střechu, ne tmavošedou omítku a červenou střechu uváděnou v PK).",
+  "spec": {
+   "wc": [
+    228,
+    218,
+    200
+   ],
+   "rc": [
+    78,
+    80,
+    88
+   ],
+   "r": "hipped",
+   "h": 15,
+   "rh": 4,
+   "win": 8
+  }
+ },
+ {
+  "name": "Masarykova věž samostatnosti",
+  "lat": 50.37754,
+  "lon": 15.63881,
+  "text": "Podle fotek z Wikimedia Commons a laseru ČÚZK (DMP 1G): pískovcová stavba se západním a východním křídlem se segmentovými střechami (okap 6 m, vrchol 8 m), uprostřed hranolový blok (~10 m), na něm válcový tambur s ochozem (14,2 m), válcová věž s terasou (20,3 m) a stříbrná kupole hvězdárny (~23 m).",
+  "spec": {
+   "wc": [
+    188,
+    174,
+    140
+   ],
+   "rc": [
+    138,
+    136,
+    130
+   ],
+   "r": "gabled",
+   "h": 6.0,
+   "rh": 2.0,
+   "win": 5,
+   "towers": [
+    {
+     "at": "c",
+     "w": 10,
+     "h": 10,
+     "top": "pyramid",
+     "to": 10.6,
+     "tc": [
+      166,
+      158,
+      140
+     ]
+    },
+    {
+     "at": "c",
+     "w": 7,
+     "h": 14.2,
+     "top": "none",
+     "round": 1
+    },
+    {
+     "at": "c",
+     "w": 5.8,
+     "h": 20.3,
+     "top": "pyramid",
+     "to": 20.5,
+     "round": 1,
+     "tc": [
+      170,
+      166,
+      156
+     ]
+    },
+    {
+     "at": "c",
+     "w": 4.4,
+     "h": 20.7,
+     "top": "dome",
+     "to": 23.5,
+     "round": 1,
+     "tc": [
+      196,
+      200,
+      204
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "name": "Kostel sv. Gotharda",
+  "lat": 50.364325,
+  "lon": 15.644162,
+  "text": "Podle fotek z Wikimedia Commons (2011–2022) a laseru ČÚZK: žlutá barokní loď se sedlovou střechou z oranžovočervených bobrovek (okap 7,5 m, hřeben 13 m) a mohutná hranolová věž u jižní strany kněžiště (římsa ~13 m) s červenofialovou plechovou bání, lucernou a cibulkou se špicí (~26–27 m).",
+  "spec": {
+   "wc": [
+    226,
+    194,
+    112
+   ],
+   "rc": [
+    184,
+    96,
+    70
+   ],
+   "r": "gabled",
+   "h": 7.5,
+   "rh": 5.5,
+   "win": 4,
+   "towers": [
+    {
+     "at": "se",
+     "side": -1,
+     "w": 7.5,
+     "h": 13,
+     "top": "helm",
+     "to": 27,
+     "tc": [
+      150,
+      80,
+      92
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "name": "Zámek s tvrzí",
+  "lat": 50.370194,
+  "lon": 15.635765,
+  "text": "Podle fotek z Wikimedia Commons, ortofota a laseru ČÚZK: zbytek původní tvrze uprostřed zámeckého dvora – přízemní budova se šedou oprýskanou omítkou, skoro bez oken, s nízkou valbovou střechou z červeného plechu (hřeben ~7,6 m).",
+  "spec": {
+   "wc": [
+    152,
+    142,
+    128
+   ],
+   "rc": [
+    158,
+    74,
+    60
+   ],
+   "r": "hipped",
+   "h": 3.6,
+   "rh": 4.0,
+   "win": 5
+  }
+ },
+ {
+  "name": "Zámek s tvrzí – západní křídlo",
+  "lat": 50.370214,
+  "lon": 15.63536,
+  "text": "Podle fotek z Wikimedia Commons, ortofota a laseru ČÚZK: hlavní jednopatrová zámecká budova na západní straně dvora – žlutá omítka s bílými šambránami a kordonovou římsou, valbová střecha ze starých červenohnědých tašek (okap ~8,6 m, hřeben ~12,8 m).",
+  "spec": {
+   "wc": [
+    228,
+    196,
+    124
+   ],
+   "rc": [
+    136,
+    88,
+    72
+   ],
+   "r": "hipped",
+   "h": 8.6,
+   "rh": 4.2,
+   "win": 8
+  }
+ },
+ {
+  "name": "Městské muzeum (Okresní dům)",
+  "lat": 50.369372,
+  "lon": 15.632604,
+  "text": "Podle fotek z Wikimedia Commons, ortofota a laseru ČÚZK: přední dvoupodlažní křídlo z hořického pískovce s balustrádou má nízkou sedlovou střechu (okap ~10,5 m, hřeben ~13 m), za ním je přízemní výstavní sál s plochou střechou (~5 m) a dvěma pásy světlíků.",
+  "spec": {
+   "wc": [
+    212,
+    190,
+    150
+   ],
+   "rc": [
+    170,
+    92,
+    82
+   ],
+   "r": "gabled",
+   "h": 10.5,
+   "rh": 2.5,
+   "win": 8,
+   "zones": [
+    {
+     "poly": [
+      [
+       50.3692039,
+       15.6324611
+      ],
+      [
+       50.3695114,
+       15.6327524
+      ],
+      [
+       50.3696531,
+       15.6323847
+      ],
+      [
+       50.3693455,
+       15.6320934
+      ]
+     ],
+     "h": 5.1,
+     "rc": [
+      178,
+      174,
+      166
+     ],
+     "win": 5,
+     "deco": [
+      {
+       "k": "strip",
+       "lines": [
+        [
+         50.3693633,
+         15.6325661,
+         50.3694075,
+         15.6324515
+        ],
+        [
+         50.3694109,
+         15.6326128,
+         50.3694555,
+         15.6324971
+        ]
+       ],
+       "w": 2.8,
+       "h": 0.4,
+       "c": [
+        188,
+        200,
+        210
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "name": "Sochařsko-kamenická škola",
+  "lat": 50.363064,
+  "lon": 15.631753,
+  "text": "Podle fotek z Wikimedia Commons, ortofota a laseru ČÚZK: novorenesanční třípodlažní budova se světle šedou kvádrovanou omítkou a pískovcovým soklem, nízká modrošedá střecha (okap ~15,5–16,5 m, hřeben ~19 m), bez věže.",
+  "spec": {
+   "wc": [
+    170,
+    168,
+    162
+   ],
+   "rc": [
+    90,
+    96,
+    108
+   ],
+   "r": "hipped",
+   "h": 16,
+   "rh": 3,
+   "win": 8
+  }
+ },
+ {
+  "name": "Synagoga",
+  "lat": 50.370403,
+  "lon": 15.633387,
+  "text": "Podle fotek z Wikimedia Commons (Czeva, Petr1888, Ben Skála) a laseru ČÚZK: přízemní novorománská sálová stavba se sedlovou střechou z červenohnědě natřeného plechu, hřeben v ose ZSZ–VJV se štíty na západě a východě (okap ~4,8 m, hřeben ~8,9 m), světle béžová omítka s bílými štíty a vysokými okny.",
+  "spec": {
+   "wc": [
+    224,
+    210,
+    186
+   ],
+   "rc": [
+    132,
+    58,
+    52
+   ],
+   "r": "gabled",
+   "h": 4.8,
+   "rh": 4.1,
+   "win": 4
+  }
+ },
+ {
+  "name": "Rozhledna Hořický chlum",
+  "lat": 50.380113,
+  "lon": 15.624811,
+  "text": "Podle fotek z Wikimedia Commons a laseru ČÚZK: pozinkovaná ocelová příhradová věž (1998, 41,5 m) zužující se ze 7 m základny, vyhlídková plošina ve 27 m s oranžovým spodkem a bílým zábradlím, nad ní červenobílý anténní stožár.",
+  "spec": {
+   "only": 1,
+   "towers": [
+    {
+     "at": "c",
+     "w": 7,
+     "h": 27,
+     "top": "lattice",
+     "to": 41.5,
+     "tc": [
+      200,
+      96,
+      56
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "name": "Pivovar – varna a komín",
+  "lat": 50.36968,
+  "lon": 15.63847,
+  "text": "Podle fotek z Wikimedia Commons (2012–2020), ortofota a laseru ČÚZK: novorenesanční pivovar (1885–1895) z okrově hnědého hořického pískovce s červenohnědými střechami (římsa ~10 m, hřeben ~14,5 m), u jehož severovýchodního rohu provozní budovy stojí štíhlý okrový cihlový komín s tmavou hlavou vysoký asi 29 m (stín na ortofotu dává 26–29 m, OSM uvádí 31 m).",
+  "spec": {
+   "wc": [
+    190,
+    164,
+    124
+   ],
+   "rc": [
+    140,
+    78,
+    64
+   ],
+   "r": "gabled",
+   "h": 10,
+   "rh": 4.5,
+   "win": 8,
+   "chimneys": [
+    {
+     "at": "pt",
+     "r": 0.8,
+     "h": 29,
+     "col": [
+      180,
+      152,
+      110
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "name": "Zemědělská akademie a gymnázium (historická budova)",
+  "lat": 50.36129,
+  "lon": 15.63249,
+  "text": "Podle fotek z Wikimedia Commons (2011), ortofota a laseru ČÚZK: novorenesanční školní budova (na fasádě nápis Obchodní akademie) se světle smetanovou fasádou a červenou taškovou valbovou střechou (římsa ~15,5 m, hřeben ~21 m), jejíž západní průčelí k Husovu pomníku rámují dva nárožní pavilony a střední rizalit se strmými šedými mansardovými střechami do ~22 m.",
+  "spec": {
+   "wc": [
+    234,
+    228,
+    198
+   ],
+   "rc": [
+    178,
+    88,
+    62
+   ],
+   "r": "hipped",
+   "h": 15.5,
+   "rh": 5.5,
+   "win": 8,
+   "face": [
+    50.36133,
+    15.63191
+   ],
+   "towers": [
+    {
+     "at": "nw",
+     "w": 7,
+     "h": 16.5,
+     "top": "pyramid",
+     "to": 22,
+     "tc": [
+      128,
+      136,
+      138
+     ]
+    },
+    {
+     "at": "sw",
+     "w": 7,
+     "h": 16.5,
+     "top": "pyramid",
+     "to": 22,
+     "tc": [
+      128,
+      136,
+      138
+     ]
+    },
+    {
+     "at": "front",
+     "w": 8,
+     "h": 16.5,
+     "top": "pyramid",
+     "to": 22,
+     "tc": [
+      128,
+      136,
+      138
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "name": "Goldschmidtova vila",
+  "lat": 50.3713883,
+  "lon": 15.6389675,
+  "text": "Podle fotek z Wikimedia Commons (2020–2021), ortofota a laseru ČÚZK: novorenesanční vila (1891–1893) z krémového pískovce s červenými cihlovými poli v patře a nízkou tmavě šedou valbovou střechou (římsa ~12,5 m), na západním nároží s hranolovou vyhlídkovou věží s plochou střechou a korouhví (laser ~18 m); v datech je chybně jako plochý sklad.",
+  "spec": {
+   "wc": [
+    214,
+    188,
+    152
+   ],
+   "rc": [
+    62,
+    70,
+    82
+   ],
+   "r": "hipped",
+   "h": 12.5,
+   "rh": 2.5,
+   "win": 8,
+   "towers": [
+    {
+     "at": "w",
+     "w": 6,
+     "h": 17.5,
+     "top": "pyramid",
+     "to": 18.2,
+     "tc": [
+      62,
+      70,
+      82
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "name": "Riegrův obelisk",
+  "lat": 50.3664243,
+  "lon": 15.6441121,
+  "text": "Podle fotek z Wikimedia Commons (2011, 2020) a ortofota ČÚZK: štíhlý pískovcový obelisk vysoký 12,4 m (OSM, drobné památky) na hranolovém podstavci, stojící na terasovitém návrší se schodištěm na vrchu Gothard, na ortofotu s úzkým stínem k SZ.",
+  "spec": {
+   "only": 1,
+   "wc": [
+    196,
+    186,
+    164
+   ],
+   "towers": [
+    {
+     "at": "c",
+     "w": 2.4,
+     "h": 3.0,
+     "top": "pyramid",
+     "to": 3.3,
+     "stone": 1
+    },
+    {
+     "at": "c",
+     "w": 1.2,
+     "h": 11.6,
+     "top": "pyramid",
+     "to": 12.4,
+     "stone": 1
+    }
+   ]
+  }
+ },
+ {
+  "name": "Mariánský sloup",
+  "lat": 50.3681833,
+  "lon": 15.6323152,
+  "text": "Podle fotek z Wikimedia Commons (2011–2020) a ortofota ČÚZK: pískovcový Mariánský sloup (1824) na náměstí – stupňovitá podnož, hranolový podstavec se sochami sv. Petra, Pavla a Jana Evangelisty a štíhlý sloup se sochou Panny Marie se svatozáří, celkem asi 10 m (odhad z fotky).",
+  "spec": {
+   "only": 1,
+   "wc": [
+    196,
+    186,
+    164
+   ],
+   "towers": [
+    {
+     "at": "c",
+     "w": 0.8,
+     "h": 8.0,
+     "top": "cone",
+     "to": 9.6,
+     "round": 1,
+     "stone": 1
+    },
+    {
+     "at": "c",
+     "w": 2.4,
+     "h": 3.8,
+     "top": "none",
+     "stone": 1
+    },
+    {
+     "at": "c",
+     "w": 5.5,
+     "h": 0.5,
+     "top": "pyramid",
+     "to": 0.6,
+     "stone": 1
+    }
+   ]
+  }
+ },
+ {
+  "name": "Komín v areálu u Maixnerovy ulice",
+  "lat": 50.37077,
+  "lon": 15.63809,
+  "text": "Podle ortofota ČÚZK a OpenStreetMap: vysoký samostatný tovární komín mezi halami severně od pivovaru – na ortofotu je vidět kruhová hlava a dlouhý vychýlený dřík (výrazně delší než u 29m komína pivovaru), OSM uvádí 48 m; laser DMP komín nezachytil a fotku na Commons nemá.",
+  "spec": {
+   "only": 1,
+   "towers": [
+    {
+     "at": "c",
+     "w": 2.6,
+     "h": 48,
+     "top": "none",
+     "round": 1,
+     "stone": 1
+    }
+   ]
+  }
+ },
+ {
+  "name": "Betonový komín u Janderovy ulice",
+  "lat": 50.36747,
+  "lon": 15.63911,
+  "text": "Podle ortofota ČÚZK a OpenStreetMap: vysoký betonový komín u jihozápadního rohu velké budovy u Janderovy ulice – na ortofotu světlá kruhová hlava a ~14 m vychýlený dřík, OSM uvádí 50 m a beton; laser DMP komín nezachytil a fotku na Commons nemá.",
+  "spec": {
+   "only": 1,
+   "towers": [
+    {
+     "at": "c",
+     "w": 3.0,
+     "h": 50,
+     "top": "none",
+     "round": 1,
+     "stone": 1
+    }
+   ]
+  }
+ },
+ {
+  "name": "Kostel sv. Máří Magdaleny (Jeřice)",
+  "lat": 50.345744,
+  "lon": 15.682817,
+  "text": "Podle fotek z Wikimedia Commons (Petr1888, 2013) a laseru ČÚZK: barokně přestavěný (1787) jednolodní kostel bez věže s bílou omítkou, okrovými lizénami a volutovým štítem na západním průčelí, sedlovou střechou z oranžovočervených tašek (okap ~8 m, hřeben ~12,6 m) a štíhlým sanktusníkem s tmavou bání na východním konci hřebene lodi (laser 18,6 m včetně špice).",
+  "spec": {
+   "wc": [
+    236,
+    224,
+    204
+   ],
+   "rc": [
+    196,
+    98,
+    62
+   ],
+   "r": "gabled",
+   "h": 8.0,
+   "rh": 4.6,
+   "win": 4,
+   "face": [
+    50.34584,
+    15.68237
+   ],
+   "towers": [
+    {
+     "at": "pt",
+     "w": 1.8,
+     "h": 13.4,
+     "top": "helm",
+     "to": 17.4,
+     "tc": [
+      72,
+      76,
+      80
+     ]
+    }
+   ]
+  }
+ },
+ {
+  "name": "Zámek Jeřice",
+  "lat": 50.341687,
+  "lon": 15.682189,
+  "text": "Podle laseru ČÚZK, ortofota a popisu v Památkovém katalogu a na Wikipedii (fotka na Wikimedia Commons není): barokní jednopatrový čtyřkřídlý zámek se čtvercovým nádvořím a světle šedou valbovou střechou (okap ~9,4 m, hřeben ~14,7 m) se šestibokou třípatrovou nárožní věží, která podle laseru, ortofota i půdorysu stojí na severovýchodním nároží (Památkový katalog píše severozápadní) a má tmavou střechu s užší horní částí do 22,3 m.",
+  "spec": {
+   "rc": [
+    176,
+    178,
+    180
+   ],
+   "r": "hipped",
+   "h": 9.4,
+   "rh": 5.3,
+   "win": 8,
+   "towers": [
+    {
+     "at": "pt",
+     "w": 5.6,
+     "h": 16.2,
+     "top": "helm",
+     "to": 22.3,
+     "tc": [
+      76,
+      88,
+      90
+     ],
+     "round": 1
+    }
+   ]
+  }
+ },
+ {
+  "name": "Komín v Chvalině",
+  "lat": 50.35216,
+  "lon": 15.63339,
+  "text": "Podle OpenStreetMap/ZABAGED (cihelný komín 28 m, ZABAGED 11186486) a ortofota ČÚZK, kde je komín vidět jako šikmo sklopený válec s kulatým ústím: samostatný tovární komín v Chvalině jižně od Hořic (laser DMP 1G tenké komíny nezachycuje – i 50m komín ve městě má v laseru max. 8,7 m).",
+  "spec": {
+   "only": 1,
+   "towers": [
+    {
+     "at": "c",
+     "w": 2.2,
+     "h": 27,
+     "to": 28,
+     "top": "none",
+     "round": 1,
+     "stone": 1
+    }
+   ]
+  }
+ },
+ {
+  "name": "Obalovna asfaltu Bašnice (u Dobré Vody)",
+  "lat": 50.33956,
+  "lon": 15.60642,
+  "text": "Podle fotek z Wikimedia Commons (2014), ortofota a laseru ČÚZK: obalovna asfaltových směsí na jižním okraji Dobré Vody u Bašnic se šedou ocelovou míchací věží, kolem níž stojí konstrukce do ~13–16 m a jejíž vrchol sahá ~20 m nad terén (na ortofotu vrhá ~14 m dlouhý stín) – nejvyšší stavba jihozápadu mapy.",
+  "spec": {
+   "only": 1,
+   "towers": [
+    {
+     "at": "c",
+     "w": 8,
+     "h": 13,
+     "top": "none",
+     "to": 13,
+     "stone": 1
+    },
+    {
+     "at": "c",
+     "w": 4.5,
+     "h": 19,
+     "top": "none",
+     "to": 19,
+     "stone": 1
+    }
+   ]
+  }
+ },
+ {
+  "name": "Koupaliště Dachova – převlékárny s pavilonem",
+  "lat": 50.383249,
+  "lon": 15.642368,
+  "text": "Podle fotek z Wikimedia Commons (2017), ortofota a laseru ČÚZK: kulturní památka – přírodní koupaliště Dachova (1925, arch. Karel Bachura) s ~90 m dlouhou řadou dřevěných převlékáren a středním pavilonem obrácenými průčelím k bazénu na jihozápad, bílé stěny s výrazným červeným rámováním a žlutými lemy, šedé plechové střechy (laser: převlékárny ~4 m, štít pavilonu ~7 m).",
+  "spec": {
+   "wc": [
+    236,
+    232,
+    222
+   ],
+   "rc": [
+    140,
+    146,
+    148
+   ],
+   "r": "gabled",
+   "h": 3.4,
+   "rh": 1.6,
+   "win": 13
+  }
+ },
+ {
+  "name": "Hasičská zbrojnice Bílsko u Hořic",
+  "lat": 50.36828,
+  "lon": 15.600001,
+  "text": "Podle fotky z Wikimedia Commons (2014), ortofota a laseru ČÚZK: světle modrá hasičská zbrojnice na návsi Velkého Bílska s červenohnědou sedlovou střechou (hřeben ~6,3 m) a malou zvoničkou se štíhlou tmavou špičkou uprostřed hřebene (laser max 7,3 m, na ortofotu vidět i se stínem).",
+  "spec": {
+   "wc": [
+    168,
+    186,
+    214
+   ],
+   "rc": [
+    166,
+    84,
+    66
+   ],
+   "r": "gabled",
+   "h": 3.6,
+   "win": 0,
+   "towers": [
+    {
+     "at": "c",
+     "w": 1.1,
+     "h": 6.8,
+     "top": "spire",
+     "to": 7.8,
+     "tc": [
+      62,
+      66,
+      76
+     ]
+    }
+   ]
+  }
+ }
+]

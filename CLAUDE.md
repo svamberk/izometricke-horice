@@ -1,5 +1,11 @@
 # izomapa – návod pro AI agenta
 
+> **Tento repozitář jsou Izometrické Hořice** (fork izomapy). Město je založené: `mesto.json` a dominanty
+> v `assets/dominanty.json` jsou součástí repozitáře, `novy_mesto.py` nespouštěj. Na Windows použij Git Bash,
+> Python z `.venv/Scripts`, `PYTHONUTF8=1` a postup z README.md. Při doplňování dominant platí CONTRIBUTING.md
+> (fotky jen vlastní nebo volně licencované, zdroje do `docs/ZDROJE-FOTEK.md`). Úpravy oproti původní izomapě:
+> `docs/ZMENY.md`, známé chyby: `docs/KONTROLA.md`.
+
 Uživatel chce izometrickou pixel-art mapu svého města („udělej mi izometrickou mapu Chrastavy“). Předloha je
 https://izomapa.fun (Liberec). Liberec sám nedělej, ten si autor spravuje sám: když o něj uživatel požádá, nabídni
 jiné město. Komunikuj česky, věcně, a před dlouhými kroky řekni, kolik budou trvat.

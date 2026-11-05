@@ -1,0 +1,33 @@
+{
+ "nazev": "Hořice",
+ "titulek": "Izometrické Hořice",
+ "h1": [
+  "Izometrické",
+  "Hořice"
+ ],
+ "podtitul": "Hořice z otevřených dat, ve stylu SimCity 2000.",
+ "popis": "Izometrická pixel-art mapa: Hořice ve stylu SimCity 2000. Roční období, den a noc, počasí a příběhy míst.",
+ "url": "https://www.svamberk.net/horice",
+ "stred": [15.643939, 50.362929],
+ "polovina": 1150.0,
+ "ctverce": [
+  [-1, 1],
+  [0, 1],
+  [1, 1],
+  [-1, 0],
+  [0, 0],
+  [1, 0],
+  [-1, -1],
+  [0, -1],
+  [1, -1]
+ ],
+ "href": 284.9,
+ "dno": -50,
+ "mhd": {
+  "gtfs": null,
+  "zdroj": null,
+  "zdroj_url": null
+ },
+ "vanocni_strom": [50.3688, 15.63269],
+ "voda_mokrad": ["dbe07698-9f13-3aa5-ac8a-14b1de68b5e6"]
+}

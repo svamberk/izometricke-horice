@@ -1,0 +1,49 @@
+# Změny oproti původní izomapě
+
+Fork vychází z [adamklatovsky/izomapa](https://github.com/adamklatovsky/izomapa) (commit `b9df8e4`, 4. 11. 2026).
+Obecně užitečné opravy (bezpečnost, Windows, dálnice) stojí za to nabídnout i do původního repozitáře.
+
+## Bezpečnost
+
+- **`render.mjs`: dočasný server pro renderer poslouchal na všech síťových rozhraních a šlo z něj číst libovolný
+  soubor z disku** (cesta s `..%2f` prošla). Teď poslouchá jen na `127.0.0.1` a vydává jen soubory ze složky projektu.
+- `render.mjs`: cesta k linuxovému Chromiu `/opt/pw-browsers/...` se na Windows vyhodnotila jako `C:\opt\...`,
+  kam může zapisovat každý uživatel. Teď se použije jen na Linuxu.
+
+## Windows
+
+- `render.mjs`: na Windows renderuje grafickou kartou přes Direct3D 11 (`--use-angle=d3d11`). Původně padal na
+  softwarový SwiftShader, řádově pomaleji.
+- `postav.sh`: Python prostředí `.venv/Scripts` (Windows) i `.venv/bin`, `PYTHONUTF8=1` (jinak výpisy a soubory
+  s češtinou padají na kódování cp1250).
+
+## Generování mapy (`prep.py`, `render.html`)
+
+- **Dálnice (`motorway`)** se dřív nekreslily vůbec (D35 chyběla, kreslily se jen „visící“ zábradlí jejích mostů).
+  Teď: šířka podle počtu pásů, sjezdy jednopruhové, čára mezi pruhy, auta, bez lamp a chodníků. Úseky
+  `is_under_construction` se nekreslí.
+- **Příhradová ocelová věž** (`"top": "lattice"` u věže dominanty) – rozhledny a vysílače: zužující se nohy, vzpěry,
+  plošina se zábradlím a červenobílý stožár.
+- Samostatné objekty dominant (`"only": 1`) berou barvu zdí ze spec `"wc"` a umí hodiny.
+- **Pole**: plodina, směr řádků a dělení se počítají z celého pole, ne z kusu ve čtverci – na švech čtverců pole
+  navazují. Lány nad 30 ha se dělí na hony po 320 m s vlastní plodinou.
+- **Lampy** jen v zástavbě (do 40 m od budovy), ne podél silnic v polích a lesích.
+- **Silnice v lese**: stromy jihozápadně od silnice se sníží nebo vynechají, aby koruny při pohledu kamery
+  nezakrývaly vozovku.
+- **Zemědělské budovy** (stodoly, kravíny) jako haly s nízkou sedlovou střechou, ne jako paneláky nebo kanceláře
+  s klimatizacemi. **Kruhové půdorysy** (sila, nádrže, jímky) jako betonové válce s plochou střechou.
+- Výška šikmé střechy z laseru: když měření ukazuje nízkou střechu (p90 − medián), střecha se sníží (dřív měly
+  široké haly 7m střechy nad 2m zdmi).
+- **Sochy** (OSM `artwork`) i mimo hřbitovy – Hořice jsou město soch. Body uvnitř budov (reliéfy) se vynechají.
+- Areály škol jako trávník se stromy místo holé dlažby.
+- Vodní plochy, které jsou podle ortofota zarostlé, jde v `mesto.json` (`"voda_mokrad": [id z Overture]`)
+  vykreslit jako mokřad (kaliště cukrovaru u Dobré Vody).
+- Mostovky silnic jsou v zimě odklizené jako silnice na terénu.
+- `render.mjs` předává okraje s řezem zeminou jen na vyžádání, jinak platí scéna (strany bez souseda),
+  jak uvádí `render_chunk.sh`.
+
+## Nástroje
+
+- `nastroje/dom_info.py` – podklady k dominantě (půdorys, laser, ortofoto, výřez renderu).
+- `nastroje/qa_tools.py` – mozaiky čtverců pro kontrolu, převod pixelu dlaždice na souřadnice, výřezy.
+- `nastroje/ftp_nahraj.py` – nahrání webu na FTP(S) hosting s vsftpd (znovupoužití TLS relace).
