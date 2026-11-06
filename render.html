@@ -239,7 +239,42 @@ const wallMat = mat(/* glsl */`
     bool w = false; bool door = false;
     float cell = 0.0;
     if (v > 0.0) {
-      if (st > 14.5) {                // velká hala: skoro plná zeď, jen pár malých okének
+      if (st > 15.5 && st < 17.5) {   // 16 novogotika (radnice), 17 novorenesance (spořitelna): okna v osách, lizény, římsy
+        float sp = st < 16.5 ? 2.2 : 2.7, nn = floor((len - 0.6) / sp), q = (u - (len - nn * sp) * 0.5) / sp;
+        bool inA = q >= 0.0 && q < nn; float du = abs(fract(q) - 0.5) * sp;          // vzdálenost od osy okna v m
+        if (st < 16.5) {              // přízemí z tmavšího pískovce, hrotitá okna se světlejší šambránou, lizény, kordonové římsy
+          float z0 = 5.9, z1 = 8.9, hw = 0.55;
+          if (v < 5.0) { z0 = 0.9; z1 = 4.2; hw = 0.62; col *= 0.88; if (v < 0.6) col = vec3(0.50, 0.47, 0.42); }
+          else if (v > 9.6) { z0 = 10.4; z1 = 13.1; hw = 0.5; }
+          float tp = z1 - hw;
+          w = inA && v > z0 && v < z1 && du < hw && (v < tp || du < z1 - v);
+          if (!w && inA && v > z0 - 0.25 && v < z1 + 0.3 && du < hw + 0.2 && (v < tp + 0.2 || du < z1 + 0.3 - v)) col *= 1.13;
+          if (inA && du > sp * 0.5 - 0.16) col *= 0.88;
+          if (abs(v - 5.0) < 0.18 || abs(v - 9.6) < 0.14) col *= 0.8;
+          cell = v < 5.0 ? 0.0 : v < 9.6 ? 1.0 : 2.0;
+        } else {                      // bosované pískovcové přízemí s okny v obloucích, šambrány a frontony, pilastry, volská oka pod římsou
+          vec3 SAND = vec3(0.82, 0.72, 0.55);
+          if (v < 5.2) {
+            col = SAND * (fract(v / 0.55) < 0.12 ? 0.8 : 1.0);
+            w = inA && v > 1.0 && du < 0.6 && (v < 3.6 || length(vec2(du, v - 3.6)) < 0.6);
+            if (!w && inA && v > 0.8 && du < 0.85 && (v < 3.6 || length(vec2(du, v - 3.6)) < 0.85)) col = SAND * 1.12;
+            cell = 0.0;
+          } else if (v < 13.6) {
+            float ff = mod(v - 5.2, 4.2);
+            w = inA && du < 0.52 && ff > 0.9 && ff < 3.1;
+            if (!w && inA && du < 0.66 && ff > 0.75 && ff < 3.25) col = SAND * 1.05;
+            if (inA && du < 0.8 && ff > 3.25 && ff < 3.6) col = SAND * 0.95;
+            if (inA && du > sp * 0.5 - 0.12) col = SAND;
+            if (ff < 0.22) col = SAND * 0.9;
+            cell = 1.0 + floor((v - 5.2) / 4.2);
+          } else {
+            w = inA && length(vec2(du * 1.35, v - 14.25)) < 0.36;
+            if (!w && inA && length(vec2(du * 1.35, v - 14.25)) < 0.5) col = SAND;
+            if (inA && du > sp * 0.5 - 0.12) col = SAND;
+            cell = 3.0;
+          }
+        }
+      } else if (st > 14.5) {                // velká hala: skoro plná zeď, jen pár malých okének
         float a = floor(u / 6.4), r = floor(v / 5.2);
         w = fract(u / 6.4) > 0.72 && fract(v / 5.2) > 0.55 && fract(v / 5.2) < 0.78 && hash(vec2(a, r) + len) > 0.5;
       } else if (st > 13.5) {                // sklo a kámen (moderní stavby): pásy skla s příčkami
@@ -606,6 +641,44 @@ function roofDeco(b, X, eave, rc) {
     }
   };
   const GOLDC = [0.85, 0.72, 0.30];
+  // vlastní modely samostatných objektů dominant ('model' ve spec), natočené k bodu 'face' (b.ma); rozměry podle fotek
+  const figure = (f, x, y, z, h, c, a = 0) => {                         // socha: roucho (komolý kužel), ramena, hlava
+    const g = (s_, u_, zz) => f(x + s_, y + u_, zz), aw = [0, 1, 1, 0];
+    ring(X, g, h * 0.17, h * 0.12, z, z + h * 0.62, 8, c, aw, a);
+    ring(X, g, h * 0.12, h * 0.09, z + h * 0.62, z + h * 0.82, 8, c, aw, a);
+    ring(X, g, h * 0.07, h * 0.065, z + h * 0.84, z + h, 8, c.map((q) => q * 1.04), aw, a);
+  };
+  function model(b) {
+    const f = frameAt(b.p[0][0] + 0.1, b.p[0][1] + 0.1, 0, b.ma || 0), g0 = b.g, c = C255(b.wc), aw = [0, 1, 1, 0];
+    if (b.mdl === 'sloup') {               // Mariánský sloup: plato, 3 stupně, podstavec s římsou, 3 světci, podnož, sloup, Panna Marie se svatozáří
+      const L = c.map((q) => q * 1.08);
+      ring(X, f, 3.3, 3.3, g0 - 0.3, g0 + 0.12, 8, [0.80, 0.79, 0.76], aw, Math.PI / 8);
+      [[2.4, 0.36], [2.05, 0.6], [1.7, 0.84]].forEach(([hw, z]) => pushBox(X, f, -hw, hw, -hw, hw, g0 + z - 0.24, g0 + z, L, aw));
+      pushBox(X, f, -1.1, 1.1, -1.1, 1.1, g0 + 0.84, g0 + 3.2, c, aw);
+      pushBox(X, f, -1.25, 1.25, -1.25, 1.25, g0 + 3.2, g0 + 3.5, L, aw);
+      pushBox(X, f, 1.08, 1.12, -0.55, 0.55, g0 + 1.4, g0 + 2.6, c.map((q) => q * 0.85), [0, 1, 0, 0]);       // reliéf na čele
+      for (const [x, y] of [[0.85, -0.85], [0.85, 0.85], [-0.85, 0.0]]) figure(f, x, y, g0 + 3.5, 1.7, c);
+      pushBox(X, f, -0.55, 0.55, -0.55, 0.55, g0 + 3.5, g0 + 4.9, c, aw);
+      pushBox(X, f, -0.65, 0.65, -0.65, 0.65, g0 + 4.9, g0 + 5.1, L, aw);
+      ring(X, f, 0.32, 0.27, g0 + 5.1, g0 + 10.7, 10, L, aw);
+      pushBox(X, f, -0.42, 0.42, -0.42, 0.42, g0 + 10.7, g0 + 11.05, L, aw);
+      figure(f, 0, 0, g0 + 11.05, 1.9, L);
+      for (let k = 0; k < 12; k++) {                                   // svatozář z 12 zlatých hvězd
+        const a = k / 12 * Math.PI * 2, hz = g0 + 12.95;
+        pushBox(X, f, -0.08, 0.08, Math.cos(a) * 0.48 - 0.08, Math.cos(a) * 0.48 + 0.08, hz + Math.sin(a) * 0.48 - 0.08, hz + Math.sin(a) * 0.48 + 0.08, GOLDC, [0.3, 1, 0, 0]);
+      }
+    } else if (b.mdl === 'kasna') {        // kašna: šestiboká pískovcová nádrž s vodou, hranolový podstavec, sousoší s mísou
+      const SL = [0.79, 0.71, 0.56], WAT = [0.36, 0.55, 0.66], SC = [0.70, 0.66, 0.58], r = 3.8;
+      ring(X, f, r, r, g0 - 0.3, g0 + 0.75, 6, SL, aw);
+      ring(X, f, r + 0.12, r + 0.12, g0 + 0.75, g0 + 0.85, 6, SL.map((q) => q * 1.06), aw);
+      ring(X, f, r - 0.3, 0.0, g0 + 0.58, g0 + 0.58, 6, WAT, [0, 1, 0, 0]);
+      pushBox(X, f, -0.55, 0.55, -0.55, 0.55, g0 + 0.3, g0 + 1.9, SL, aw);
+      pushBox(X, f, -0.68, 0.68, -0.68, 0.68, g0 + 1.9, g0 + 2.05, SL, aw);
+      for (let k = 0; k < 3; k++) { const a = k / 3 * Math.PI * 2; figure(f, Math.cos(a) * 0.38, Math.sin(a) * 0.38, g0 + 2.05, 1.25, SC); }
+      ring(X, f, 0.18, 0.18, g0 + 2.05, g0 + 3.3, 8, SC, aw);
+      ring(X, f, 0.25, 0.62, g0 + 3.3, g0 + 3.65, 10, SC, aw);
+    }
+  }
   // příhradová ocelová věž (rozhledna, vysílač): 4 nohy zužující se k plošině ve výšce h, vzpěry, plošina a stožár do 'to'
   const lattice = (t) => {
     const f = frameAt(t.x, t.y, 0, t.a), ST = [0.74, 0.76, 0.78], AC = C255(t.tc), WH = [0.94, 0.94, 0.92], aw = [0, 1, 0, 0];
@@ -688,6 +761,19 @@ function roofDeco(b, X, eave, rc) {
           const a0 = k / 5 * Math.PI / 2, a1 = (k + 1) / 5 * Math.PI / 2;
           ring(R, f, R0 * 1.02 * Math.cos(a0), k === 4 ? 0 : R0 * 1.02 * Math.cos(a1), t.h + H * 0.8 * Math.sin(a0), t.h + H * 0.8 * Math.sin(a1), 10, tc, [0, 0, 0, 0]);
         }
+      } else if (t.top === 'gotic') {      // novogotická věž radnice: kamenné zábradlí ochozu, 4 nárožní fiály, nízká stříška
+        const c0 = T - 0.22, rl = t.h + 0.95, fh = t.to;
+        for (const [a0, a1, b0, b1] of [[-T, T, -T, -T + 0.22], [-T, T, T - 0.22, T], [-T, -T + 0.22, -T, T], [T - 0.22, T, -T, T]])
+          pushBox(X, f, a0, a1, b0, b1, t.h, rl, wcol, [0, 1, 1, 0]);
+        for (const [cx, cy] of [[-c0, -c0], [c0, -c0], [c0, c0], [-c0, c0]]) {
+          pushBox(X, f, cx - 0.28, cx + 0.28, cy - 0.28, cy + 0.28, t.h, rl + 0.6, wcol, [0, 1, 1, 0]);
+          ring(R, (s_, u_, z) => f(cx + s_, cy + u_, z), 0.42, 0, rl + 0.6, fh, 4, tc, [0, 0, 0, 0], Math.PI / 4);
+        }
+        ring(R, f, T * 0.75, 0, t.h, t.h + 1.6, 4, tc, [0, 0, 0, 0], Math.PI / 4);
+        for (let i = 0; i < 4; i++) {                                    // zvonová okna pod hodinami (dvojice na každé straně)
+          const a = i * Math.PI / 2, ff = (s_, u_, z) => f(Math.cos(a) * u_ - Math.sin(a) * s_, Math.sin(a) * u_ + Math.cos(a) * s_, z);
+          for (const sv of [-0.45, 0.45]) pushBox(X, ff, sv - 0.16, sv + 0.16, T - 0.02, T + 0.03, t.h - 6.6, t.h - 4.6, [0.20, 0.21, 0.24], [0, 1, 0, 0]);
+        }
       } else if (t.top === 'pyramid' || t.top === 'cone') {
         ring(R, f, R0 * 1.12, 0, t.h, t.to, t.top === 'cone' ? 10 : (t.round ? 10 : 4), tc, [0, 0, 0, 0], rot);
       } else if (t.top === 'none') {
@@ -696,13 +782,36 @@ function roofDeco(b, X, eave, rc) {
           pushBox(X, frameAt(t.x + Math.cos(a) * T * 0.85, t.y + Math.sin(a) * T * 0.85, 0, a), -0.5, 0.5, -0.4, 0.4, t.h, t.h + 1.0, wcol, [0, 1, 1, 0]);
         }
       }
-      if (t.top !== 'none') pushBox(X, f, -0.07, 0.07, -0.07, 0.07, t.to, t.to + Math.max(1.2, H * 0.06), GOLDC, [0, 1, 0, 0]);
+      if (t.top !== 'none' && t.top !== 'gotic') pushBox(X, f, -0.07, 0.07, -0.07, 0.07, t.to, t.to + Math.max(1.2, H * 0.06), GOLDC, [0, 1, 0, 0]);
     }
     for (const [x, y, z0, z1, r, col] of b.chs || []) {                 // komíny
       const f = frameAt(x, y, 0, 0), c = C255(col);
       ring(X, f, r * 1.25, r, z0, z1, 10, c, [0, 1, 1, 0]);
       ring(X, f, r * 1.08, r * 1.08, z1 - 1.0, z1, 10, c.map((q) => q * 0.75), [0, 1, 1, 0]);
     }
+    if (b.lis) {                                                         // lizény (pilastry) s fiálami nebo vázami nad římsou
+      const [lw, ld, z0, z1, top, th, lc] = b.lisp, c = C255(lc), aw = top === 'vase' ? [0, 1, 0, 0] : [0, 1, 1, 0];   // vázy: ploché pilastry bez obrysu
+      for (const [x, y, ao] of b.lis) {
+        const f = frameAt(x, y, 0, ao);                                  // s = ven z fasády, t = podél fasády
+        pushBox(X, f, -0.05, ld, -lw / 2, lw / 2, z0, z1, c, aw);
+        if (top === 'pinnacle') {
+          pushBox(X, f, -0.05, ld, -lw / 2, lw / 2, z1, z1 + th * 0.35, c, aw);
+          ring(R, (s_, u_, z) => f(ld / 2 - 0.02 + s_, u_, z), lw * 0.62, 0, z1 + th * 0.35, z1 + th, 4, c.map((q) => q * 0.85), [0, 0, 0, 0], Math.PI / 4);
+        } else if (top === 'vase') {
+          const g = (s_, u_, z) => f(ld / 2 - 0.1 + s_, u_, z);
+          pushBox(X, g, -0.22, 0.22, -0.22, 0.22, z1, z1 + 0.25, c, aw);
+          ring(X, g, 0.16, 0.28, z1 + 0.25, z1 + 0.6, 8, c, aw); ring(X, g, 0.28, 0.12, z1 + 0.6, z1 + 0.9, 8, c, aw);
+          ring(X, g, 0.12, 0.0, z1 + 0.9, z1 + th, 8, c, aw);
+        }
+      }
+    }
+    for (const [x, y, ao, bw, z, bd] of b.bal || []) {                 // balkon: kamenná deska, železné zábradlí
+      const f = frameAt(x, y, 0, ao), IRON = [0.17, 0.17, 0.19], SL = [0.72, 0.62, 0.46];
+      pushBox(X, f, -0.05, bd, -bw / 2, bw / 2, z - 0.25, z, SL, [0, 1, 1, 0]);
+      pushBox(X, f, bd - 0.06, bd, -bw / 2, bw / 2, z, z + 1.0, IRON, [0, 1, 0, 0]);
+      for (const sg of [-1, 1]) pushBox(X, f, -0.05, bd, sg * bw / 2 - 0.03, sg * bw / 2 + 0.03, z, z + 1.0, IRON, [0, 1, 0, 0]);
+    }
+    if (b.mdl) model(b);
     for (const [cx, cy, ang, L, Wd, top, rc] of b.blk || []) {        // nástavba (jeviště divadla)
       const f = frameAt(cx, cy, 0, ang), c = C255(rc);
       pushBox(W, f, -L / 2, L / 2, -Wd / 2, Wd / 2, b.e - 0.5, top, C255(b.wc), [0, 0, 0, 0]);

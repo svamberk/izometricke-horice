@@ -778,7 +778,7 @@ def match_doms():
         if cand: DOM_BY_ID[idx[cand[0]].id] = d
 
 
-def dom_pos(p, at, sp, d, w, side=0.0, t=0.5):
+def dom_pos(p, at, sp, d, w, side=0.0, t=0.5, inset=0.6):
     """poloha věže / komína na půdorysu: světová strana, průčelí k bodu 'face', střed, podél osy, nebo bod dominanty"""
     c = p.centroid
     if at == 'pt': return d['xy'][0], d['xy'][1], 0.0
@@ -802,7 +802,7 @@ def dom_pos(p, at, sp, d, w, side=0.0, t=0.5):
             if best is None or sc > best[0]: best = (sc, a0, a1, m, nrm)
         _, a0, a1, m, nrm = best
         tg = (a1 - a0) / (np.linalg.norm(a1 - a0) or 1)
-        x, y = m - nrm * (w / 2 + 0.6) + tg * side
+        x, y = m - nrm * (w / 2 + inset) + tg * side
         return float(x), float(y), math.atan2(tg[1], tg[0])
     dirs = {'n': (0, 1), 's': (0, -1), 'e': (1, 0), 'w': (-1, 0), 'ne': (1, 1), 'nw': (-1, 1), 'se': (1, -1), 'sw': (-1, -1)}
     vx, vy = dirs[at]; vl = math.hypot(vx, vy); vx, vy = vx / vl, vy / vl
@@ -811,6 +811,32 @@ def dom_pos(p, at, sp, d, w, side=0.0, t=0.5):
     inside = Point(x - vx * (w / 2 + 0.4), y - vy * (w / 2 + 0.4))
     x, y = (inside.x, inside.y) if p.contains(inside) else (x + (c.x - x) * 0.15, y + (c.y - y) * 0.15)
     return x + ax[0] * side, y + ax[1] * side, ang
+
+
+def facade_points(p, sp, ls):
+    """body na stranách opsaného obdélníku (průčelí k bodu 'face', 'left', 'right' při pohledu na průčelí) -> [x, y, úhel ven];
+    'sides' = posuny od středu průčelí v m, nebo 'n' bodů rovnoměrně včetně nároží"""
+    c = p.centroid; o = p.minimum_rotated_rectangle; rc = list(o.exterior.coords)[:4]
+    fx, fy = sp.get('face_xy', [c.x, c.y - 50]); dv = np.array([fx - c.x, fy - c.y]); dv /= (np.linalg.norm(dv) or 1)
+    eds = []
+    for k in range(4):
+        a0, a1 = np.array(rc[k]), np.array(rc[(k + 1) % 4]); m = (a0 + a1) / 2
+        nrm = m - np.array([c.x, c.y]); nrm /= (np.linalg.norm(nrm) or 1); eds.append((float(nrm @ dv), a0, a1, nrm))
+    fi = max(range(4), key=lambda k: eds[k][0])
+    named = {'front': eds[fi], 'left': eds[(fi + 1) % 4], 'right': eds[(fi + 3) % 4]}
+    for nm, dv_ in (('n', (0, 1)), ('s', (0, -1)), ('e', (1, 0)), ('w', (-1, 0))):     # nebo podle světové strany
+        named[nm] = eds[max(range(4), key=lambda k: float(eds[k][3] @ np.array(dv_)))]
+    out = []
+    for nm in ls.get('on', ['front']):
+        _, a0, a1, nrm = named[nm]; L = float(np.linalg.norm(a1 - a0)); tg = (a1 - a0) / (L or 1); m = (a0 + a1) / 2
+        if ls.get('sides') is not None and nm == 'front': sides = ls['sides']
+        elif ls.get('sp'):                 # mezi okenní osy (stejné rozteče jako okna v shaderu: osy vystředěné na stěně)
+            nw = math.floor((L - 0.6) / ls['sp']); off = (L - nw * ls['sp']) / 2; sides = [off + k * ls['sp'] - L / 2 for k in range(nw + 1)]
+        else: sides = [(-0.5 + i / (ls.get('n', 2) - 1)) * (L - ls.get('w', 0.6)) for i in range(ls.get('n', 2))]
+        for sd in sides:
+            x, y = m + tg * sd
+            out.append([round(float(x), 2), round(float(y), 2), round(math.atan2(nrm[1], nrm[0]), 4)])
+    return out
 
 
 def unhole(p):
@@ -1157,7 +1183,7 @@ for _, r in bld.iterrows():
             if n and rs != 'flat' and eave / n < 2.5: n -= 1
             if not n: n = round(eave / 3.0)
             if n >= 1: b['fh'] = round(min(4.6, max(2.4, eave / n)), 2)
-            if style in (0, 1) and r.id in SHOP_IDS: b['shop'] = 1     # obchod v přízemí: výlohy
+            if style in (0, 1) and (r.id in SHOP_IDS or so.get('shop')): b['shop'] = 1     # obchod v přízemí: výlohy (places nebo upřesnění)
         if dsp:
             b['dn'] = dom['name']
             if dsp.get('canopy'): b['cn'] = dsp['canopy']
@@ -1169,11 +1195,18 @@ for _, r in bld.iterrows():
                 b.setdefault('blk', []).append([round(p.centroid.x, 2), round(p.centroid.y, 2), round(math.atan2(e1[1], e1[0]), 4),
                                                 round(bl, 2), round(bw, 2), round(gnd + blk['h'], 2), list(blk.get('rc', rc))])
             for tw in (dsp.get('towers', []) if pi == tw_piece else []):
-                x, y, a = dom_pos(pieces[pi], tw['at'], dsp, dom, tw['w'], tw.get('side', 0.0), tw.get('t', 0.5))
+                x, y, a = dom_pos(pieces[pi], tw['at'], dsp, dom, tw['w'], tw.get('side', 0.0), tw.get('t', 0.5), tw.get('in', 0.6))
                 if not own and not AREA.contains(Point(x, y)) and not EXT.contains(Point(x, y)): continue
                 b.setdefault('tw', []).append({'x': round(x, 2), 'y': round(y, 2), 'a': round(a, 4), 'w': tw['w'], 'h': round(gnd + tw['h'], 2),
-                    'to': round(gnd + tw.get('to', tw['h']), 2), 'top': tw['top'], 'tc': tw.get('tc', [90, 96, 104]), 'wc': list(wc),
+                    'to': round(gnd + tw.get('to', tw['h']), 2), 'top': tw['top'], 'tc': tw.get('tc', [90, 96, 104]), 'wc': list(tw.get('wc', wc)),
                     'clock': tw.get('clock', 0), 'round': tw.get('round', 0), 'stone': tw.get('stone', 0), 'ruin': tw.get('ruin', 0), 'b': round(base, 2)})
+            if dsp.get('lisenes') and pi == tw_piece:            # lizény (pilastry) s fiálami nebo vázami nad římsou
+                ls = dsp['lisenes']; b['lisp'] = [ls.get('w', 0.6), ls.get('d', 0.25), round(gnd + ls.get('z0', 0.0), 2), round(gnd + eave + ls.get('dz', 0.0), 2),
+                                                  ls.get('top', 'none'), ls.get('th', 1.2), list(ls.get('col', wc))]
+                b['lis'] = facade_points(p, dsp, ls)
+            for bl in (dsp.get('balconies', []) if pi == tw_piece else []):   # balkony na průčelí
+                fx_, fy_, fa = facade_points(p, dsp, {'sides': [bl['side']], 'on': ['front']})[0]
+                b.setdefault('bal', []).append([fx_, fy_, fa, bl.get('w', 3.0), round(gnd + bl['z'], 2), bl.get('d', 0.9)])
             if dsp.get('skylights') and pi == tw_piece:          # světlíky na ploché střeše
                 inner = p.buffer(-6.0)
                 if not inner.is_empty:
@@ -1253,13 +1286,17 @@ for d in DOMS:
     b = {'p': [[round(x - 0.1, 2), round(y - 0.1, 2)], [round(x + 0.1, 2), round(y - 0.1, 2)], [round(x + 0.1, 2), round(y + 0.1, 2)]],
          'b': round(g - 0.6, 2), 'g': round(g, 2), 'e': round(g, 2), 'r': 'flat', 'rh': 0.0, 'parts': [], 'wc': (150, 146, 136), 'rc': (150, 146, 136),
          's': 4, 'id': len(buildings), 'lm': 'dom', 'dn': d['name'], 'only': 1, 'tw': []}
-    for tw in sp['towers']:
+    if sp.get('model'):                  # vlastní model z render.html (natočení: k bodu 'face', jinak 'a' ve stupních)
+        fxy = sp.get('face_xy')
+        b['mdl'] = sp['model']; b['ma'] = round(math.atan2(fxy[1] - y, fxy[0] - x) if fxy else math.radians(sp.get('a', 0.0)), 4)
+        b['wc'] = tuple(sp.get('wc', b['wc']))
+    for tw in sp.get('towers', []):
         b['tw'].append({'x': round(x, 2), 'y': round(y, 2), 'a': 0.0, 'w': tw['w'], 'h': round(g + tw['h'], 2), 'to': round(g + tw.get('to', tw['h']), 2),
                         'top': tw['top'], 'tc': tw.get('tc', [90, 96, 104]), 'wc': list(sp.get('wc', [150, 146, 136])), 'clock': tw.get('clock', 0), 'round': tw.get('round', 0),
                         'stone': tw.get('stone', 0), 'ruin': tw.get('ruin', 0), 'b': round(g - 0.6, 2)})
     if not own: b['gh'] = 1
     buildings.append(b)
-    r_ = 14 + sp['towers'][0]['w']; nd.ellipse([*P([(x - r_, y + r_)])[0], *P([(x + r_, y - r_)])[0]], fill=255)   # bez stromů kolem
+    r_ = 14 + sp['towers'][0]['w'] if sp.get('towers') else sp.get('clear', 6); nd.ellipse([*P([(x - r_, y + r_)])[0], *P([(x + r_, y - r_)])[0]], fill=255)   # bez stromů kolem
 # hráze nádrží: kamenná zeď s korunou (v datech polygon), budova bez oken
 for _, r in inf.iterrows():
     if r['class'] != 'dam' or r.geom.geom_type not in ('Polygon', 'MultiPolygon'): continue

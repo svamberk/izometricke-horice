@@ -85,3 +85,23 @@ Do mapy ani do repozitáře se nevkládají. Autor a licence každé fotky:
 - 01_pavilon_od_jz_2017.jpg – MartinVeselka, CC BY-SA 4.0 – https://commons.wikimedia.org/wiki/File:Koupali%C5%A1t%C4%9B_Dachova_u_Ho%C5%99ic_(1).jpg
 - 02_celek_pres_bazen_2017.jpg – Petr1888, CC BY-SA 4.0 – https://commons.wikimedia.org/wiki/File:Koupali%C5%A1t%C4%9B_Dachova_02.jpg
 - 01_zbrojnice_s_vezickou_2014.jpg – Petr1888, CC BY-SA 3.0 – https://commons.wikimedia.org/wiki/File:B%C3%ADlsko_u_Ho%C5%99ic_hasi%C4%8Dsk%C3%A1_zbrojnice.JPG
+
+## namesti
+(náměstí Jiřího z Poděbrad: radnice, spořitelna, Mariánský sloup, kašna, pranýř, domy na náměstí)
+- 00.jpg – Hedvika Šimková, CC BY-SA 4.0 – https://commons.wikimedia.org/wiki/File:Ho%C5%99ice,_n%C3%A1m%C4%9Bst%C3%AD_Ji%C5%99%C3%ADho_z_Pod%C4%9Bbrad_200.jpg
+- 01.jpg – Jirka23, CC BY-SA 3.0 – https://commons.wikimedia.org/wiki/File:Ho%C5%99ice-Square-in-winter2012a.jpg
+- 02.jpg – Jirka23, CC BY-SA 3.0 – https://commons.wikimedia.org/wiki/File:Ho%C5%99ice-Square-in-winter2012b.jpg
+- 03.jpg – Insidderr, CC BY-SA 4.0 – https://commons.wikimedia.org/wiki/File:Ka%C5%A1na_Ho%C5%99ice.jpg
+- 04.jpg – Petr1888, CC BY-SA 3.0 – https://commons.wikimedia.org/wiki/File:Ka%C5%A1na_(Ho%C5%99ice),_n%C3%A1m._Ji%C5%99%C3%ADho_z_Pod%C4%9Bbrad.JPG
+- 05.jpg – Kenyh Cevarom, CC BY-SA 3.0 – https://commons.wikimedia.org/wiki/File:Ho%C5%99ice_radnice_na_namesti_9674.JPG
+- 06.jpg – Ben Skála, CC BY-SA 3.0 – https://commons.wikimedia.org/wiki/File:Ho%C5%99ice-radnice2011a.jpg
+- 07.jpg – Prazak, CC BY 2.5 – https://commons.wikimedia.org/wiki/File:Ho%C5%99ice_-_morov%C3%BD_sloup_na_n%C3%A1m%C4%9Bst%C3%AD.jpg
+- 08.jpg – Petr1888, CC BY-SA 3.0 – https://commons.wikimedia.org/wiki/File:Sloup_se_souso%C5%A1%C3%ADm_-_Mari%C3%A1nsk%C3%BD_sloup_(Ho%C5%99ice)_01.JPG
+- 09.jpg – Jirka23, CC BY-SA 3.0 – https://commons.wikimedia.org/wiki/File:Ho%C5%99ice-Maria-column-detailM2011a.jpg
+- 10.jpg – Petr1888, CC BY-SA 3.0 – https://commons.wikimedia.org/wiki/File:M%C4%9B%C5%A1%C5%A5ansk%C3%BD_d%C5%AFm_(Ho%C5%99ice),_n%C3%A1m._Ji%C5%99%C3%ADho_z_Pod%C4%9Bbrad_164.JPG
+- 11.jpg – Petr1888, CC BY-SA 3.0 – https://commons.wikimedia.org/wiki/File:M%C4%9B%C5%A1%C5%A5ansk%C3%BD_d%C5%AFm_(Ho%C5%99ice),_n%C3%A1m._Ji%C5%99%C3%ADho_z_Pod%C4%9Bbrad_627.JPG
+- 12.jpg – Ben Skála, CC BY-SA 3.0 – https://commons.wikimedia.org/wiki/File:Ho%C5%99ice,_spo%C5%99itelna.jpg
+- 13.jpg – Petr1888, CC BY-SA 3.0 – https://commons.wikimedia.org/wiki/File:Spo%C5%99itelna_(Ho%C5%99ice)_01.JPG
+- 14.jpg – Noe, CC0 – https://commons.wikimedia.org/wiki/File:Pran%C3%BD%C5%99_p%C5%99ed_radnic%C3%AD_v_Ho%C5%99ic%C3%ADch_(Q94444588)_01.jpg
+- 15.jpg – Noe, CC0 – https://commons.wikimedia.org/wiki/File:Pran%C3%BD%C5%99_p%C5%99ed_radnic%C3%AD_v_Ho%C5%99ic%C3%ADch_(Q94444588)_02.jpg
+- (fotky ulic z docs/ZDROJE-FASAD.md: Hořice - náměstí Jiřího z Poděbrad 01–06, Kašna na náměstí Jiřího z Poděbrad v Hořicích – Petr1888, CC BY-SA 4.0)

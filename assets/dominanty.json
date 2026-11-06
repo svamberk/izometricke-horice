@@ -52,7 +52,7 @@
   "name": "Radnice",
   "lat": 50.367554,
   "lon": 15.632159,
-  "text": "Podle fotek z Wikimedia Commons a laseru ČÚZK: novogotická radnice (1872) se smetanově okrovou fasádou a tmavou břidlicovou valbovou střechou (římsa ~14 m, hřeben ~18 m), z jejíhož středního rizalitu do náměstí vyrůstá tmavá kamenná hranolová věž s hodinami a plochým vrcholem se zábradlím (~21–22 m, fiály ~24 m).",
+  "text": "Podle fotek z Wikimedia Commons (2011–2020) a laseru ČÚZK: novogotická radnice (1872, F. Poličanský), 7 os, okrové pískovcové přízemí a světlejší patra s hrotitými okny, lizény zakončené fiálami nad římsou, balkon nad vchodem, tmavá břidlicová valbová střecha (římsa ~14 m). Ze středního rizalitu vyrůstá tmavá kamenná věž s hodinami, zvonovými okny a ochozem s kamenným zábradlím a čtyřmi nárožními fiálami (~21 m, fiály ~23,5 m).",
   "spec": {
    "wc": [
     222,
@@ -67,7 +67,7 @@
    "r": "hipped",
    "h": 14,
    "rh": 4.3,
-   "win": 8,
+   "win": 16,
    "face": [
     50.368,
     15.63217
@@ -75,12 +75,49 @@
    "towers": [
     {
      "at": "front",
-     "w": 3.2,
+     "w": 3.4,
      "h": 21,
-     "to": 22,
-     "top": "none",
+     "to": 23.6,
+     "top": "gotic",
      "stone": 1,
-     "clock": 1
+     "clock": 1,
+     "in": 0.0,
+     "tc": [
+      128,
+      120,
+      106
+     ]
+    }
+   ],
+   "lisenes": {
+    "on": [
+     "front"
+    ],
+    "sides": [
+     -7.75,
+     -5.3,
+     -1.95,
+     1.95,
+     5.3,
+     7.75
+    ],
+    "w": 0.7,
+    "d": 0.3,
+    "top": "pinnacle",
+    "th": 4.0,
+    "dz": 0.4,
+    "col": [
+     206,
+     182,
+     138
+    ]
+   },
+   "balconies": [
+    {
+     "side": 0.0,
+     "w": 2.4,
+     "z": 5.3,
+     "d": 0.8
     }
    ]
   }
@@ -112,7 +149,7 @@
   "name": "Bývalá spořitelna (MěÚ)",
   "lat": 50.367462,
   "lon": 15.632404,
-  "text": "Podle fotek z Wikimedia Commons, ortofota a laseru ČÚZK: novorenesanční bývalá spořitelna (1864, dnes MěÚ) s bílou omítkou a pískovcovým přízemím, římsou ~15 m a tmavě šedou břidlicovou valbovou střechou s hřebenem ~19 m (fotky i ortofoto ukazují světlou fasádu a šedou střechu, ne tmavošedou omítku a červenou střechu uváděnou v PK).",
+  "text": "Podle fotek z Wikimedia Commons (2011–2020), ortofota a laseru ČÚZK: novorenesanční bývalá spořitelna (1864, dnes MěÚ) – bosované pískovcové přízemí s okny v obloucích, bílá patra s pískovcovými šambránami a frontony, pilastry zakončené vázami nad římsou, vlys s volskými oky, dva balkony se železným zábradlím do náměstí, tmavá břidlicová valbová střecha (římsa ~15 m, hřeben ~19 m).",
   "spec": {
    "wc": [
     228,
@@ -127,7 +164,41 @@
    "r": "hipped",
    "h": 15,
    "rh": 4,
-   "win": 8
+   "win": 17,
+   "face": [
+    50.368,
+    15.63235
+   ],
+   "lisenes": {
+    "on": [
+     "front",
+     "e"
+    ],
+    "sp": 2.7,
+    "w": 0.4,
+    "d": 0.08,
+    "z0": 5.2,
+    "top": "vase",
+    "th": 1.15,
+    "dz": 0.3,
+    "col": [
+     210,
+     186,
+     142
+    ]
+   },
+   "balconies": [
+    {
+     "side": -8.1,
+     "w": 2.6,
+     "z": 5.5
+    },
+    {
+     "side": 8.1,
+     "w": 2.6,
+     "z": 5.5
+    }
+   ]
   }
  },
  {
@@ -594,38 +665,94 @@
   "name": "Mariánský sloup",
   "lat": 50.3681833,
   "lon": 15.6323152,
-  "text": "Podle fotek z Wikimedia Commons (2011–2020) a ortofota ČÚZK: pískovcový Mariánský sloup (1824) na náměstí – stupňovitá podnož, hranolový podstavec se sochami sv. Petra, Pavla a Jana Evangelisty a štíhlý sloup se sochou Panny Marie se svatozáří, celkem asi 10 m (odhad z fotky).",
+  "text": "Podle fotek z Wikimedia Commons (2011–2020) a ortofota ČÚZK: pískovcový Mariánský sloup (1824) na parkovišti náměstí – kamenné plato, tři stupně, podstavec s reliéfem a římsou, na něm sochy sv. Petra, Pavla a Jana Evangelisty, podnož, štíhlý sloup a socha Panny Marie se svatozáří z dvanácti zlatých hvězd, celkem asi 13 m (odhad z fotek).",
   "spec": {
    "only": 1,
+   "model": "sloup",
    "wc": [
     196,
     186,
     164
    ],
+   "face": [
+    50.36755,
+    15.63216
+   ],
+   "clear": 5
+  }
+ },
+ {
+  "name": "Kašna",
+  "lat": 50.3688855,
+  "lon": 15.6328104,
+  "text": "Podle fotek z Wikimedia Commons (2007–2020) a půdorysu z OpenStreetMap/Overture: kašna v parkové části náměstí – šestiboká pískovcová nádrž (průměr asi 7,6 m), hranolový podstavec a sousoší tří postav nesoucích mísu (asi 3,6 m).",
+  "spec": {
+   "only": 1,
+   "model": "kasna",
+   "a": 3.3,
+   "clear": 4
+  }
+ },
+ {
+  "name": "Pranýř",
+  "lat": 50.3676766,
+  "lon": 15.6321958,
+  "text": "Podle fotek z Wikimedia Commons (Noe, CC0): nízký kamenný pranýř (hranolový sloupek asi 1,5 m) před průčelím radnice vedle vchodu.",
+  "spec": {
+   "only": 1,
+   "wc": [
+    150,
+    152,
+    150
+   ],
+   "clear": 1,
    "towers": [
     {
      "at": "c",
-     "w": 0.8,
-     "h": 8.0,
-     "top": "cone",
-     "to": 9.6,
-     "round": 1,
-     "stone": 1
-    },
-    {
-     "at": "c",
-     "w": 2.4,
-     "h": 3.8,
-     "top": "none",
-     "stone": 1
-    },
-    {
-     "at": "c",
-     "w": 5.5,
-     "h": 0.5,
+     "w": 0.5,
+     "h": 1.25,
      "top": "pyramid",
-     "to": 0.6,
+     "to": 1.55,
      "stone": 1
+    }
+   ]
+  }
+ },
+ {
+  "name": "Nárožní dům s věžičkou (čp. 156)",
+  "lat": 50.3688264,
+  "lon": 15.6322859,
+  "text": "Podle fotek z Wikimedia Commons (2020): bílý nárožní dům na rohu náměstí a Haberské s nárožním arkýřem a věžičkou s modrou cibulovou bání, červenohnědá střecha (podle ortofota ČÚZK).",
+  "spec": {
+   "wc": [
+    236,
+    234,
+    228
+   ],
+   "rc": [
+    141,
+    89,
+    83
+   ],
+   "r": "hipped",
+   "rh": 3.5,
+   "face": [
+    50.3687,
+    15.6325
+   ],
+   "towers": [
+    {
+     "at": "pt",
+     "w": 3.0,
+     "h": 15.0,
+     "to": 19.6,
+     "top": "helm",
+     "tc": [
+      46,
+      110,
+      198
+     ],
+     "round": 1
     }
    ]
   }
