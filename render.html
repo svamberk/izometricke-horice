@@ -36,15 +36,17 @@ renderer.setSize(TILE + 2 * PAD, TILE + 2 * PAD);
 document.body.appendChild(renderer.domElement);
 const world = new THREE.Scene();
 
-// ---------- kamera: dimetrie 2:1 (SimCity 2000), pohled od JZ (musí odpovídat geo.py) ----------
+// ---------- kamera: dimetrie 2:1 (SimCity 2000), pohled od JZ, otočení parametrem az (musí odpovídat geo.py) ----------
 const EL = Math.asin(Math.tan(Math.atan(0.5)));
-const AZ = THREE.MathUtils.degToRad(225);
+const AZ = THREE.MathUtils.degToRad(parseFloat(PARAMS.az || '225'));   // 225 od JZ, 315 od SZ, 45 od SV, 135 od JV
 const camDir = new THREE.Vector3(Math.sin(AZ) * Math.cos(EL), Math.sin(EL), -Math.cos(AZ) * Math.cos(EL));
 const cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 1, 8000);
 cam.position.copy(camDir).multiplyScalar(4000);
 cam.lookAt(0, 0, 0);
 cam.updateMatrixWorld();
-const SUN = new THREE.Vector3(0.38, 0.62, 0.68).normalize();
+// slunce se otáčí s kamerou (geo.SUN): ve všech pohledech svítí na pravou stěnu domů
+const SUN = (() => { const d = AZ - THREE.MathUtils.degToRad(225), x = 0.38, z = 0.68;
+  return new THREE.Vector3(x * Math.cos(d) - z * Math.sin(d), 0.62, z * Math.cos(d) + x * Math.sin(d)).normalize(); })();
 
 // ---------- společné shadery ----------
 const COMMON = /* glsl */`
@@ -357,8 +359,8 @@ function roofDeco(b, X, eave, rc) {
   for (const [k, x0, y0, x1, y1, w, h, r, g, bl, ...rest] of b.dz) {
     const L = Math.hypot(x1 - x0, y1 - y0), f = frameAt(x0, y0, eave, Math.atan2(y1 - y0, x1 - x0)), col = [r / 255, g / 255, bl / 255];
     if (k === 0) {
-      // prosklená svislá strana shedu vždy ke kameře (pohled od jihozápadu), jinak by řady splynuly se střechou
-      const an = Math.atan2(y1 - y0, x1 - x0), sg = Math.sin(an) - Math.cos(an) > 0 ? 1 : -1;
+      // prosklená svislá strana shedu vždy ke kameře, jinak by řady splynuly se střechou
+      const an = Math.atan2(y1 - y0, x1 - x0), sg = Math.cos(an) * Math.cos(AZ) - Math.sin(an) * Math.sin(AZ) > 0 ? 1 : -1;
       const t0 = -sg * w / 2, t1 = sg * (w / 2 - 0.35);
       both(f(0, t0, 0.02), f(L, t0, 0.02), f(L, t1, h), f(0, t1, h), rc.map((q) => q * 0.78));
       both(f(0, t1, h), f(L, t1, h), f(L, t1, 0.02), f(0, t1, 0.02), col);

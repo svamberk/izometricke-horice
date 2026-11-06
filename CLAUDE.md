@@ -75,7 +75,7 @@ Ukazuj uživateli výřezy před a po.
 
 ## Jak to funguje (pro úpravy kódu)
 
-- `geo.py`: souřadnice a kamera (dimetrie 2:1, pohled od jihozápadu), čte `mesto.json`. Čtverec (0, 0) je střed města,
+- `geo.py`: souřadnice a kamera (dimetrie 2:1, pohled od jihozápadu; `IZO_POHLED=1..3` otočí kameru i slunce po 90°, `./postav_pohledy.sh` postaví otočené pohledy do `site/p1..p3/`), čte `mesto.json`. Čtverec (0, 0) je střed města,
   i roste na východ, j na sever. `MARGIN` 80,5 m: každý čtverec kreslí i pás sousedů (budovy, stromy) kvůli švům.
 - `prep.py DATA i,j`: scéna čtverce do `build/` (0,0) nebo `build/c<i>_<j>/`. Obecná pravidla budov: činžák (navazující
   nepravidelné budovy v husté zástavbě) má šikmou střechu, panelák (navazující obdélníky se stejnou hloubkou) plochou;

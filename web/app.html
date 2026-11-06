@@ -162,6 +162,9 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
   bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); display: flex; gap: 6px;
 }
 .controls .px-btn { width: 44px; height: 44px; padding: 0; font-size: 1.2rem; }
+.rot { position: fixed; z-index: 3; right: calc(max(16px, env(safe-area-inset-right, 0px)) + 200px); bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); display: flex; gap: 6px; }
+.rot .px-btn { width: 44px; height: 44px; padding: 0; font-size: 1.3rem; display: grid; place-items: center; }
+.rot svg { width: 26px; height: 26px; transition: transform .3s; }
 .minimap {
   position: fixed; z-index: 3; left: max(16px, env(safe-area-inset-left, 0px)); bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
   background: var(--panel); border: 2px solid var(--edge); box-shadow: 4px 4px 0 rgba(0, 0, 0, .35); padding: 4px; display: grid; gap: 4px;
@@ -189,6 +192,7 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
   .panel.closed .sub { display: none; }
   h1 { font-size: 1.2rem; }
   .controls, .minimap, .fold { display: none; }
+  .rot { bottom: calc(env(safe-area-inset-bottom, 0px) + 76px); right: max(10px, env(safe-area-inset-right, 0px)); }
   .folded .panel { transform: none; }
   .mbar {
     display: grid; grid-template-columns: repeat(4, 1fr) 1fr 0.8fr; gap: 6px;
@@ -316,6 +320,11 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
   <button class="px-btn" id="home" type="button" title="Celá mapa">⌂</button>
   <button class="px-btn" id="share" type="button" title="Sdílet tento pohled" aria-label="Sdílet tento pohled"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11M8 7l4-4 4 4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/><path d="M8 10H5v11h14V10h-3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/></svg></button>
 </div>
+<div class="rot" id="rot" hidden>
+  <button class="px-btn" id="rotL" type="button" title="Otočit mapu doleva" aria-label="Otočit mapu doleva">⟲</button>
+  <button class="px-btn" id="north" type="button" title="Sever" aria-label="Sever"><svg id="northArrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l6 15-6-3-6 3z" fill="#e8483c"/><text x="12" y="23.5" text-anchor="middle" font-size="7" font-weight="700" fill="currentColor">S</text></svg></button>
+  <button class="px-btn" id="rotR" type="button" title="Otočit mapu doprava" aria-label="Otočit mapu doprava">⟳</button>
+</div>
 <div class="toast" id="toast" role="status" hidden></div>
 <dialog class="help" id="helpDlg" aria-labelledby="helpTitle">
   <button class="px-btn close" id="helpClose" type="button" aria-label="Zavřít">×</button>
@@ -327,6 +336,7 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
     <li><b>Budova:</b> klikněte na ni a ukáže se název, adresa a odkaz na Mapy.cz.</li>
     <li><b>Roční období, denní doba a počasí</b> se přepínají v menu. Na mobilu jsou roční období a denní doba i ve spodní liště.</li>
     <li><b>Hledání</b> zná ulice, adresy, budovy i zajímavá místa.</li>
+    <li><b>Otočení mapy</b> ⟲ ⟳ po 90°: pohled od jihozápadu, severozápadu, severovýchodu nebo jihovýchodu. Střelka ukazuje sever, klepnutím na ni se vrátíte na výchozí pohled.</li>
     <li><b>Sdílet</b> <span class="ico-inline"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11M8 7l4-4 4 4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/><path d="M8 10H5v11h14V10h-3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/></svg></span> zkopíruje odkaz přesně na to, co právě vidíte, včetně ročního období a denní doby.</li>
   </ul>
   <p class="muted">Vytvořeno nástrojem <a href="https://github.com/adamklatovsky/izomapa" target="_blank" rel="noopener">izomapa</a> od <a href="https://www.adamklatovsky.cz/" target="_blank" rel="noopener">Adama Klatovského</a> (původní mapa: <a href="https://izomapa.fun" target="_blank" rel="noopener">izometrický Liberec</a>).<br>
@@ -345,12 +355,18 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
 <script>
 (async () => {
 
-  const [TILES, OV] = await Promise.all([fetch('tiles.json').then((r) => r.json()), fetch('overlay.json').then((r) => r.json())]);
+  const hashTokens = (location.hash || '').slice(1).split('@')[0].split('-');
+  // otočení mapy po 90°: pohled od JZ (výchozí), SZ, SV, JV; data pohledu N > 0 jsou ve složce pN/ (#leto-sv@…)
+  const VIEWS = ['jz', 'sz', 'sv', 'jv'];
+  let VIEW = Math.max(0, VIEWS.indexOf(hashTokens.find((t) => VIEWS.includes(t)) || 'jz')), P = VIEW ? `p${VIEW}/` : '';
+  const getJ = (u) => fetch(u).then((r) => { if (!r.ok) throw new Error(u); return r.json(); });
+  let TILES, OV;
+  try { [TILES, OV] = await Promise.all([getJ(`${P}tiles.json`), getJ(`${P}overlay.json`)]); }
+  catch { VIEW = 0; P = ''; [TILES, OV] = await Promise.all([getJ('tiles.json'), getJ('overlay.json')]); }   // pohled chybí: výchozí
   const W = OV.w, Hh = OV.h;
   const $ = (id) => document.getElementById(id);
   const isMobile = () => matchMedia('(max-width: 640px)').matches;
   const state = { season: 'summer', night: 0, weather: 'clear', sel: null, hover: null, wip: false };
-  const hashTokens = (location.hash || '').slice(1).split('@')[0].split('-');
   const SEASON_TOKEN = { jaro: 'spring', leto: 'summer', podzim: 'autumn', zima: 'winter' };
   for (const t of hashTokens) { if (SEASON_TOKEN[t]) state.season = SEASON_TOKEN[t]; if (t === 'noc') state.night = 1; if (t === 'soumrak') state.night = 0.42; if (t === 'vse') state.wip = true; }
   if (state.season === 'winter') state.weather = 'snow';
@@ -366,8 +382,9 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
     const dx = (any.x0 - base.x0) / base.mpp, dy = (base.y1 - any.y1) / base.mpp;
     LAYERS.push({ key, status: ch.status, src: (v) => ch[v], x: dx / W, y: dy / W, w: +any.Image.Size.Width / W });
   }
-  // pořadí vrstev podle hloubky: pohled od JZ, takže čtverce dál na S a V (větší i + j) se kreslí dřív (níž)
-  const far = (k) => { const [i, j] = k.slice(1).split('_').map(Number); return i + j; };
+  // pořadí vrstev podle hloubky: čtverce dál od kamery se kreslí dřív (níž); Zc = směr ke kameře (X × Y)
+  const Zc = ((X, Y) => [X[1] * Y[2] - X[2] * Y[1], X[2] * Y[0] - X[0] * Y[2], X[0] * Y[1] - X[1] * Y[0]])(OV.cam.X, OV.cam.Y);
+  const far = (k) => { const [i, j] = k.slice(1).split('_').map(Number); return j * Zc[2] - i * Zc[0]; };
   LAYERS.sort((a, b) => far(b.key) - far(a.key));
   if (!WIP) { $('wipSel').parentElement.hidden = true; state.wip = true; }   // vše hotové: bez přepínače, celá mapa   // bez rozpracovaných čtverců (např. náhled v artefaktu)
   const shown = (k) => state.wip || (LAYERS.find((l) => l.key === k) || {}).status === 'hotovo';
@@ -392,8 +409,8 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
   async function addPreview(season) {
     const gen = ++previewGen;
     try {
-      const pv = await fetch(`preview/${season}.json${VER}`).then((r) => r.json());
-      const it = await add({ tileSource: { type: 'image', url: `preview/${season}.webp${VER}`, buildPyramid: false },
+      const pv = await fetch(`${P}preview/${season}.json${VER}`).then((r) => r.json());
+      const it = await add({ tileSource: { type: 'image', url: `${P}preview/${season}.webp${VER}`, buildPyramid: false },
         x: (pv.x0 - base.x0) / base.mpp / W, y: (base.y1 - pv.y1) / base.mpp / W, width: pv.w * pv.mpp / base.mpp / W, index: 0 });
       if (it && gen !== previewGen) { viewer.world.removeItem(it); return; }   // mezitím jiné období
       if (it) { if (previewItem) viewer.world.removeItem(previewItem); previewItem = it; viewer.world.setItemIndex(it, 0); }
@@ -594,7 +611,7 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
   const onChunk = [];
   function loadChunk(k) {
     if (CH[k]) return CH[k].ready;
-    CH[k] = { ready: fetch(`overlay/${k}.json`).then((r) => r.json()).then((d) => {
+    CH[k] = { ready: fetch(`${P}overlay/${k}.json`).then((r) => r.json()).then((d) => {
       Object.assign(CH[k], d);
       for (const b of d.buildings) b.k = k;
       addBuildings(d.buildings);
@@ -749,7 +766,7 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
   for (const s of OV.streets) index.push({ label: s.name, kind: 'ulice', k: s.k, n: norm(s.name), go: () => goTo(s.xy[0], s.xy[1], 0.9) });
   // adresy celé mapy jsou ve zvláštním souboru, načtou se při prvním psaní do hledání
   let addrLoad = null;
-  const loadAddr = () => addrLoad || (addrLoad = fetch('search.json').then((r) => r.json()).then((A) => {
+  const loadAddr = () => addrLoad || (addrLoad = fetch(`${P}search.json`).then((r) => r.json()).then((A) => {
     for (const [a, k, cx, cy, i, kind] of A) index.push({ label: a, kind: kind || 'adresa', k, n: norm(a), go: () => { goTo(cx, cy, 2); loadChunk(k).then((c) => c && showBuilding(c.buildings[i])); } });
   }).catch(() => {}));
   $('q').addEventListener('focus', loadAddr);
@@ -790,10 +807,14 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
   $('helpClose').addEventListener('click', () => $('helpDlg').close());
   $('helpDlg').addEventListener('click', (e) => { if (e.target === $('helpDlg')) $('helpDlg').close(); });
   // sdílení: odkaz obsahuje polohu, přiblížení, roční období a denní dobu (#zima-noc@50.77,15.06,0.8)
-  async function share() {
+  const stateTokens = (view) => {
     const tok = [{ spring: 'jaro', summer: 'leto', autumn: 'podzim', winter: 'zima' }[state.season]];
     if (state.night > 0.7) tok.push('noc'); else if (state.night > 0.25) tok.push('soumrak');
-    const url = `${location.origin}${location.pathname}#${tok.join('-')}@${(location.hash.split('@')[1] || '')}`;
+    if (view) tok.push(VIEWS[view]);
+    return tok.join('-');
+  };
+  async function share() {
+    const url = `${location.origin}${location.pathname}#${stateTokens(VIEW)}@${(location.hash.split('@')[1] || '')}`;
     const toast = (t) => { $('toast').textContent = t; $('toast').hidden = false; clearTimeout(share.t); share.t = setTimeout(() => { $('toast').hidden = true; }, 2200); };
     try {
       if (navigator.share && isMobile()) { await navigator.share({ title: document.title, url }); return; }
@@ -801,6 +822,20 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
     } catch { toast(url); }
   }
   zbtn('share', share); zbtn('mShare', share);
+  // otočení mapy: jiný pohled = jiné dlaždice, stránka se načte znovu se stejným středem a přiblížením
+  function rotate(nv) {
+    const c = viewer.viewport.getCenter(true), [x, y] = imgToWorld(c.x * W, c.y * W), [lon, lat] = lonlat(x, y);
+    const km = viewer.viewport.getBounds(true).width * W * cam.mpp / 1000;
+    location.hash = `${stateTokens(nv)}@${lat.toFixed(5)},${lon.toFixed(5)},${km.toFixed(2)}`;
+    location.reload();
+  }
+  if ((TILES.pohledy || []).length === 4) {
+    $('rot').hidden = false;
+    zbtn('rotR', () => rotate((VIEW + 3) % 4)); zbtn('rotL', () => rotate((VIEW + 1) % 4)); zbtn('north', () => VIEW && rotate(0));
+    const a = toImg(0, 0, 0), b = toImg(0, 100, 0);            // kam na obrazovce míří sever
+    $('northArrow').style.transform = `rotate(${Math.atan2(b[0] - a[0], a[1] - b[1]) * 180 / Math.PI}deg)`;
+    $('north').title = VIEW ? 'Sever (zpět na výchozí pohled od jihozápadu)' : 'Sever';
+  }
   function setMenu(open) { $('panel').classList.toggle('closed', !open); $('menu').setAttribute('aria-expanded', String(open)); $('menu').textContent = open ? 'Skrýt' : 'Menu'; }
   $('menu').addEventListener('click', () => setMenu($('panel').classList.contains('closed')));
   // desktop: panel jde zasunout ouškem vpravo od něj, stav si pamatuje prohlížeč
@@ -1008,9 +1043,9 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
     R(lean > 0 ? 2 : -3, 4, 1, 3, '#9aa0a8');          // hůlka
   }
   // jedoucí vozidla: stejný model jako zaparkovaná auta v renderu (karoserie, prosklení, střecha, 4 kola), stěny stínované
-  // stejným sluncem (od jihovýchodu). Kreslí se jako render: do malého obrázku v rozlišení mapy (1 px = cam.mpp),
+  // stejným sluncem (cam.sun, otáčí se s pohledem). Kreslí se jako render: do malého obrázku v rozlišení mapy (1 px = cam.mpp),
   // s tmavým obrysem, a zvětší se bez vyhlazení. Obrázky se cachují podle barvy a směru (48 směrů).
-  const SUNV = (() => { const v = [0.38, -0.68, 0.62], n = Math.hypot(...v); return v.map((q) => q / n); })();
+  const SUNV = (() => { const v = cam.sun || [0.38, -0.68, 0.62], n = Math.hypot(...v); return v.map((q) => q / n); })();
   const RGB = {}, rgbOf = (hex) => RGB[hex] || (RGB[hex] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)));
   const lit = (rgb, d) => { const f = (0.62 + 0.42 * Math.max(0, d)) / 0.88; return `rgb(${rgb.map((q) => Math.min(255, Math.round(q * f))).join(',')})`; };
   const VEH = new Map(), NDIR = 48;
@@ -1020,7 +1055,7 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
     const a = k / NDIR * Math.PI * 2, fx_ = Math.cos(a), fy_ = Math.sin(a), sxv = -fy_, syv = fx_;
     const O = toImg(0, 0, 0), R = (s, t, h) => { const p = toImg(fx_ * s + sxv * t, fy_ * s + syv * t, h); return [p[0] - O[0], p[1] - O[1]]; };
     const l = len / 2, w = wid / 2, faces = [];
-    const vis = (nx, ny) => nx + ny < 0;                                   // normála míří ke kameře (na jihozápad)
+    const vis = (nx, ny) => nx * Z[0] - ny * Z[2] > 0;                     // normála míří ke kameře
     const sun = (nx, ny, nz) => nx * SUNV[0] + ny * SUNV[1] + nz * SUNV[2];
     const box = (s0, s1, t0, t1, z0, z1, rgb, topRgb) => {
       for (const [nx, ny, A, B] of [[fx_, fy_, [s1, t0], [s1, t1]], [-fx_, -fy_, [s0, t1], [s0, t0]], [sxv, syv, [s1, t1], [s0, t1]], [-sxv, -syv, [s0, t0], [s1, t0]]])

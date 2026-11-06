@@ -1,11 +1,11 @@
 """Náhled složené mapy z dlaždic rendereru (build/.../tiles_<varianta>) – kontrola švů bez DZI a webu.
 
 python compose.py [varianta] [měřítko] [výstup.png] [i,j ...]   např. python compose.py autumn 8 build/nahled.png
-Čtverce se skládají od nejvzdálenějšího (pohled od JZ: větší i + j = dál), stejně jako v prohlížeči.
+Čtverce se skládají od nejvzdálenějšího od kamery (geo.depth_of), stejně jako v prohlížeči. Pohled: IZO_POHLED.
 """
 import json, os, sys
 from PIL import Image
-from geo import CHUNKS, chunk_dir
+from geo import CHUNKS, SFX, chunk_dir, depth_of
 
 Image.MAX_IMAGE_PIXELS = None
 variant = sys.argv[1] if len(sys.argv) > 1 else 'autumn'
@@ -15,11 +15,11 @@ only = {tuple(int(v) for v in a.split(',')) for a in sys.argv[4:]}
 
 
 def src(c):
-    return f'build/tiles_{variant}' if tuple(c) == (0, 0) else f'{chunk_dir(c)}/tiles_{variant}'
+    return f'build/tiles_{variant}{SFX}' if tuple(c) == (0, 0) else f'{chunk_dir(c)}/tiles_{variant}{SFX}'
 
 
 chunks = [c for c in CHUNKS if os.path.exists(f'{src(c)}/info.json') and (not only or c in only)]
-chunks.sort(key=lambda c: -(c[0] + c[1]))
+chunks.sort(key=lambda c: -depth_of(c))
 infos = {c: json.load(open(f'{src(c)}/info.json')) for c in chunks}
 mpp = infos[chunks[0]]['mpp']
 gx0 = min(i['x0'] for i in infos.values()); gy1 = max(i['y1'] for i in infos.values())

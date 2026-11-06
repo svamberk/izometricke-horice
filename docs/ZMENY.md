@@ -59,6 +59,19 @@ Obecně užitečné opravy (bezpečnost, Windows, dálnice) stojí za to nabídn
   zamítnuté (špatný dům, zeď ve stínu) se nepoužily. Výsledek v `assets/upresneni.json` (`wc`), zdroje fotek
   v [ZDROJE-FASAD.md](ZDROJE-FASAD.md). Street View, Mapy.cz ani jiné panoramy se nepoužívají (podmínky to zakazují).
 
+## Otáčení mapy
+
+- Čtyři pohledy po 90°: `IZO_POHLED` = 0 od jihozápadu (výchozí, jako originál), 1 od SZ, 2 od SV, 3 od JV
+  (`geo.py` `POHLED`, `render.html` parametr `az`). **Slunce se otáčí s kamerou**, takže je osvětlení (světlá pravá
+  stěna, stíny) ve všech pohledech stejné.
+- Na směru kamery závisí i pořadí skládání čtverců (`geo.depth_of`, `compose.py`, prohlížeč), snížení stromů u lesních
+  silnic (`prep.py`), prosklená strana shedových střech a viditelné stěny jedoucích aut.
+- `./postav_pohledy.sh` postaví pohledy 1–3: dlaždice do `build/.../tiles_<varianta>_pN`, web do `site/pN/`
+  (dlaždice, overlay, náhled, hledání; `index.html` a `mhd.json` jsou společné). `set_status.py` zapíše do `tiles.json`
+  seznam hotových pohledů.
+- Prohlížeč: tlačítka ⟲ ⟳ a střelka severu (klepnutí = zpět na výchozí pohled). Otočení načte stránku znovu se stejným
+  středem a přiblížením, pohled je v odkazu (`#leto-sv@50.368,15.632,1`). Bez všech čtyř pohledů se tlačítka neukážou.
+
 ## Prohlížeč (`overlay.py`)
 
 - **Názvy obcí a částí** nad mapou (podle adres; místo s nejhustší zástavbou části), Hořice větším písmem.

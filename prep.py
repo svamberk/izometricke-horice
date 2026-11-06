@@ -1465,17 +1465,17 @@ for t in trees:
     seen.add(k); T.append(t)
 tz = ground(np.array([t[0] for t in T]), np.array([t[1] for t in T]))
 trees = [[round(t[0], 2), round(t[1], 2), round(float(z), 2), round(t[2], 1), t[3], t[4]] for t, z in zip(T, tz)]
-# stromy v lese nesmí zakrýt silnici (kamera od JZ pod úhlem geo.EL): strom jihozápadně od silnice se sníží, aby jeho koruna
+# stromy v lese nesmí zakrýt silnici (kamera geo.AZ pod úhlem geo.EL): strom mezi kamerou a silnicí se sníží, aby jeho koruna
 # nesahala přes vozovku; když by měl být nižší než 5 m, skryje se (kind 2 – pořadí stromů v seznamu zůstává)
 _rd = [l.buffer(w / 2 + 0.5) for _, g, c, w, _n in roads if c in ('motorway', 'trunk', 'primary', 'secondary', 'tertiary', 'unclassified')
        for l in lines(g.intersection(EXT.buffer(60)))]
 _fo = [r.geom for _, r in land.iterrows() if r['class'] in ('forest', 'wood') and r.geom.geom_type in ('Polygon', 'MultiPolygon')]
 if _rd and _fo and trees:
     _rdu = shapely.unary_union(_rd); _fou = shapely.unary_union(_fo).buffer(0); shapely.prepare(_rdu); shapely.prepare(_fou)
-    _k = 1.0 / math.tan(geo.EL); _d = math.sqrt(0.5)
+    _k = 1.0 / math.tan(geo.EL); _dx, _dy = -math.sin(geo.AZ), -math.cos(geo.AZ)   # po zemi od kamery
     _x = np.array([t[0] for t in trees]); _y = np.array([t[1] for t in trees]); _h = np.array([t[3] for t in trees])
     _reach = _h * _k + 2.5                                         # kam po zemi sahá koruna v pohledu kamery (+ poloměr koruny)
-    _rays = shapely.linestrings(np.stack([np.stack([_x, _y], 1), np.stack([_x + _reach * _d, _y + _reach * _d], 1)], 1))
+    _rays = shapely.linestrings(np.stack([np.stack([_x, _y], 1), np.stack([_x + _reach * _dx, _y + _reach * _dy], 1)], 1))
     _cand = np.nonzero(shapely.contains_xy(_fou, _x, _y) & shapely.intersects(_rays, _rdu))[0]
     _dist = shapely.distance(shapely.points(_x[_cand], _y[_cand]), shapely.intersection(_rays[_cand], _rdu))
     for i, dd in zip(_cand, _dist):

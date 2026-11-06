@@ -22,6 +22,7 @@ Když vám izomapa ušetřila práci, autor nástroje bude rád za [kafe ☕](ht
   ke sjezdu Hořice; úsek ve výstavbě se nekreslí), mosty, auta, lampy, sochy, obchody v přízemí (Overture Places).
 - **Barvy střech** všech budov z ortofota ČÚZK, **barvy fasád** asi 280 domů z volně licencovaných fotek ulic
   na Wikimedia Commons ([docs/ZDROJE-FASAD.md](docs/ZDROJE-FASAD.md)).
+- **Otáčení mapy** po 90° (pohled od jihozápadu, severozápadu, severovýchodu a jihovýchodu), střelka ukazuje sever.
 - **Ručně doladěné dominanty** (25 staveb, [assets/dominanty.json](assets/dominanty.json)) podle fotek
   z Wikimedia Commons, laseru ČÚZK a Památkového katalogu, např.:
   kostel Narození Panny Marie, radnice s věžičkou, bývalá spořitelna, Masarykova věž samostatnosti,
@@ -70,6 +71,7 @@ Pak (všude):
 ```sh
 ./postav.sh            # stáhne data a postaví celou mapu do složky site/
 ./postav.sh render     # po úpravě dominant nebo pravidel: jen scény, render a web
+./postav_pohledy.sh    # otočené pohledy (od SZ, SV, JV) do site/p1..p3/ – pro tlačítka otáčení mapy, ~1 h na pohled
 ```
 
 Náhled: `.venv/Scripts/python -m http.server --bind 127.0.0.1 -d site 8000` (na Macu/Linuxu `.venv/bin/python`)
@@ -81,7 +83,8 @@ Návod pro AI agenty (Claude Code, Codex) je v [CLAUDE.md](CLAUDE.md).
 
 ## Zveřejnění
 
-Výsledek je statická složka `site/` (asi 0,8 GB, 3 600 souborů), stačí ji nahrát na libovolný webhosting.
+Výsledek je statická složka `site/` (asi 0,8 GB a 3 600 souborů na jeden pohled, se čtyřmi pohledy pro otáčení
+asi 3 GB), stačí ji nahrát na libovolný webhosting.
 Pro FTP hosting (např. WEDOS, který vyžaduje šifrované spojení se znovupoužitím relace) je tu
 [nastroje/ftp_nahraj.py](nastroje/ftp_nahraj.py) – nahrává několika spojeními, po přerušení pokračuje
 a `index.html` nahraje až nakonec. Přihlašovací údaje bere ze souboru netrc, heslo nikde nevypisuje.

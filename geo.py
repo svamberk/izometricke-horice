@@ -55,7 +55,23 @@ KX = math.cos(math.radians(LAT0)) * 111320.0
 KY = 110574.0
 
 EL = math.asin(math.tan(math.atan(0.5)))   # 30° -> dimetrie 2:1
-AZ = math.radians(225)                     # pohled od jihozápadu
+# Otočení mapy po 90°: IZO_POHLED 0 = od jihozápadu (výchozí), 1 = od SZ, 2 = od SV, 3 = od JV. Slunce se otáčí s kamerou,
+# takže osvětlení (světlá pravá a tmavší levá stěna) vypadá ve všech pohledech stejně. Výstupy pohledu N > 0:
+# dlaždice build/.../tiles_<varianta>_pN, web site/pN/ (dlaždice, overlay, náhled, hledání); index.html je společný.
+POHLED = int(os.environ.get('IZO_POHLED', '0')) % 4
+AZ = math.radians(225 + 90 * POHLED)
+SFX = f'_p{POHLED}' if POHLED else ''      # přípona složek s dlaždicemi rendereru
+SITE = f'site/p{POHLED}' if POHLED else 'site'   # složka dat pohledu ve webu
+PRE = f'p{POHLED}/' if POHLED else ''      # totéž jako cesta v adrese (relativně k index.html)
+
+
+def rot(e, n):
+    """vodorovný vektor (východ, sever) otočený s kamerou oproti výchozímu pohledu od JZ"""
+    d = AZ - math.radians(225)
+    return e * math.cos(d) + n * math.sin(d), n * math.cos(d) - e * math.sin(d)
+
+
+SUN = (*rot(0.38, -0.68), 0.62)            # směr ke slunci (východ, sever, nahoru); render.html počítá totéž
 CAM_Z = np.array([math.sin(AZ) * math.cos(EL), math.sin(EL), -math.cos(AZ) * math.cos(EL)])
 CAM_X = np.cross([0, 1, 0], CAM_Z); CAM_X /= np.linalg.norm(CAM_X)
 CAM_Y = np.cross(CAM_Z, CAM_X)
@@ -73,6 +89,12 @@ def view(x, y, h):
     """lokální (východ, sever, výška) -> souřadnice v rovině kamery + hloubka (menší = blíž)"""
     p = np.stack([np.asarray(x, float), np.asarray(h, float), -np.asarray(y, float)], -1)
     return p @ CAM_X, p @ CAM_Y, -(p @ CAM_Z)
+
+
+def depth_of(c):
+    """hloubka středu čtverce v pohledu kamery (větší = dál), pořadí skládání čtverců"""
+    x, y = chunk_center(c)
+    return float(view(x, y, 0.0)[2])
 
 
 class Image2D:

@@ -39,7 +39,7 @@ page.on('console', (m) => console.log('[page]', m.text()));
 page.on('requestfailed', (r) => console.log('[rf]', r.url(), r.failure()?.errorText));
 page.on('pageerror', (e) => { console.log('[pageerror]', e.message); process.exit(1); });
 const t0 = Date.now();
-await page.goto(`http://127.0.0.1:${port}/render.html?mpp=${mpp}&tile=${tile}&season=${args.season || 'autumn'}&mode=${args.mode || 'day'}&dir=${args.dir || 'build'}&alpha=${args.alpha || '0'}${args.skirt ? `&skirt=${args.skirt}` : ''}${args.gx0 ? `&gx0=${args.gx0}&gy1=${args.gy1}` : ''}`);
+await page.goto(`http://127.0.0.1:${port}/render.html?mpp=${mpp}&tile=${tile}&season=${args.season || 'autumn'}&mode=${args.mode || 'day'}&dir=${args.dir || 'build'}&alpha=${args.alpha || '0'}${args.skirt ? `&skirt=${args.skirt}` : ''}${args.gx0 ? `&gx0=${args.gx0}&gy1=${args.gy1}` : ''}${args.az ? `&az=${args.az}` : ''}`);
 await page.waitForFunction(() => window.READY === true, null, { timeout: 240000, polling: 1000 });
 const info = await page.evaluate(() => window.INFO);
 console.log('scéna připravena za', (Date.now() - t0) / 1000, 's', info);
