@@ -207,20 +207,22 @@ for name, lat, lon, text in NEEDS:
 os.makedirs('site/overlay', exist_ok=True)
 for K, v in per_chunk.items():
     json.dump(v, open(f'site/overlay/{K}.json', 'w'), separators=(',', ':'), ensure_ascii=False)
-# názvy čtvrtí (Overture divisions: macrohood + obce/osady), zobrazují se jen při oddálení
+# názvy obcí a osad nad zástavbou, zobrazují se jen při oddálení. Osada = postal_city adres (u adres bez ulice je to
+# skutečná osada: Chlum, Doubrava, Chloumek…), popisek nad místem s nejvíc adresami do 150 m; a = počet adres / 100 (velikost písma)
 districts = []
-_dv = pq.read_table('data_all/division_area.parquet').to_pandas()
-_SKIP = set(MESTO.get('skryte_casti', []))      # názvy částí, které se na mapě nemají ukazovat (náměstí apod.)
-for st, n, g in zip(_dv.subtype, _dv.names, _dv.geometry):
-    nm = n.get('primary') if isinstance(n, dict) else None
-    if st not in ('macrohood', 'microhood') or not nm or nm in _SKIP: continue
-    gg = shapely.ops.transform(lambda x, y, z=None: to_local(x, y), shapely.from_wkb(g))
-    rp = gg.representative_point(); c = chunk_of(rp.x, rp.y)
-    if c not in CKEY: continue
+_SKIP = set(MESTO.get('skryte_casti', []))      # názvy, které se na mapě nemají ukazovat
+_grp = {}
+for _a in pq.read_table('data_all/address.parquet', columns=['geometry', 'postal_city']).to_pylist():
+    if not _a['postal_city'] or _a['postal_city'] in _SKIP: continue
+    _pt = shapely.from_wkb(_a['geometry']); _x, _y = (float(v) for v in to_local(_pt.x, _pt.y))
+    if chunk_of(_x, _y) in CKEY: _grp.setdefault(_a['postal_city'], []).append((_x, _y))
+for nm, pts in _grp.items():
+    if len(pts) < 8: continue
+    P_ = np.array(pts); d2 = ((P_[:, None, :] - P_[None, :, :]) ** 2).sum(-1)
+    k = int(np.argmax((d2 < 150 ** 2).sum(1))); cx_, cy_ = P_[d2[k] < 150 ** 2].mean(0)
     OFF = (0.0, 0.0)
-    nm = nm.replace(MESTO['nazev'] + '-', '')
-    districts.append({'name': nm, 'xy': list(px(rp.x, rp.y, gz(rp.x, rp.y))[:2]), 'a': round(gg.area / 1e6, 2)})
-print('čtvrtí', len(districts))
+    districts.append({'name': nm, 'xy': list(px(cx_, cy_, gz(cx_, cy_))[:2]), 'a': round(len(pts) / 100, 2)})
+print('obcí a osad', len(districts), sorted((d['name'] for d in districts)))
 # tramvaje: graf kolejí přes všechny čtverce, linky = nejkratší cesta mezi konečnými (TRAM_LINES), tam a zpět
 OFF = (0.0, 0.0)
 tnodes, tadj = {}, {}

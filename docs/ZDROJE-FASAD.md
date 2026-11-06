@@ -1,0 +1,181 @@
+# Zdroje barev fasád
+
+Barvy fasád běžných domů jsou změřené z volně licencovaných fotek ulic na Wikimedia Commons
+(nastroje/fasady_fotky.py, nastroje/fasada_barva.py). Fotky se do mapy ani do repozitáře nevkládají; z každé se vzala jen barva zdi.
+
+- [Boží muka na Hankově náměstí v Hořicích.jpg](https://commons.wikimedia.org/wiki/File%3ABo%C5%BE%C3%AD_muka_na_Hankov%C4%9B_n%C3%A1m%C4%9Bst%C3%AD_v_Ho%C5%99ic%C3%ADch.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - Družstevní ulice 03.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_Dru%C5%BEstevn%C3%AD_ulice_03.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - Palackého náměstí 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_Palack%C3%A9ho_n%C3%A1m%C4%9Bst%C3%AD_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - Palackého náměstí 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_Palack%C3%A9ho_n%C3%A1m%C4%9Bst%C3%AD_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - Třešňová ulice 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_T%C5%99e%C5%A1%C5%88ov%C3%A1_ulice_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - náměstí Jiřího z Poděbrad 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_n%C3%A1m%C4%9Bst%C3%AD_Ji%C5%99%C3%ADho_z_Pod%C4%9Bbrad_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - náměstí Jiřího z Poděbrad 03.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_n%C3%A1m%C4%9Bst%C3%AD_Ji%C5%99%C3%ADho_z_Pod%C4%9Bbrad_03.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - náměstí Jiřího z Poděbrad 04.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_n%C3%A1m%C4%9Bst%C3%AD_Ji%C5%99%C3%ADho_z_Pod%C4%9Bbrad_04.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - náměstí Jiřího z Poděbrad 05.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_n%C3%A1m%C4%9Bst%C3%AD_Ji%C5%99%C3%ADho_z_Pod%C4%9Bbrad_05.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Aloise Hlavatého.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Aloise_Hlavat%C3%A9ho.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Alšova 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Al%C5%A1ova_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Alšova.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Al%C5%A1ova.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice B. Němcové 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_B._N%C4%9Bmcov%C3%A9_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice B. Němcové 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_B._N%C4%9Bmcov%C3%A9_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice B. Němcové.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_B._N%C4%9Bmcov%C3%A9.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Barákova 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Bar%C3%A1kova_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Blahoslavova 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Blahoslavova_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Brandlova 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Brandlova_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Brandlova 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Brandlova_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Brejníkova.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Brejn%C3%ADkova.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Družstevní 05.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Dru%C5%BEstevn%C3%AD_05.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Erbenova 03.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Erbenova_03.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Haberská 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Habersk%C3%A1_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Haklova 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Haklova_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Haklova 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Haklova_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Haklova.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Haklova.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Harantova 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Harantova_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Harantova 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Harantova_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Harantova 03.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Harantova_03.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Harantova.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Harantova.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Havlíčkova 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Havl%C3%AD%C4%8Dkova_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Havlíčkova 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Havl%C3%AD%C4%8Dkova_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Havlíčkova 03.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Havl%C3%AD%C4%8Dkova_03.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Havlíčkova 05.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Havl%C3%AD%C4%8Dkova_05.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Havlíčkova 07.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Havl%C3%AD%C4%8Dkova_07.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Havlíčkova.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Havl%C3%AD%C4%8Dkova.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Husova 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Husova_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Husova 03.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Husova_03.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Husova 05.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Husova_05.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Husova 06.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Husova_06.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Husova.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Husova.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Hálkova.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_H%C3%A1lkova.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice J. Štursy 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_J._%C5%A0tursy_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice J. Štursy 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_J._%C5%A0tursy_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice J. Štursy 04.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_J._%C5%A0tursy_04.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Jablonského 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Jablonsk%C3%A9ho_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Jablonského 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Jablonsk%C3%A9ho_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Janderova 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Janderova_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Janderova 03.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Janderova_03.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Janderova 04.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Janderova_04.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Janderova.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Janderova.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Jiráskova 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Jir%C3%A1skova_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Jiráskova 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Jir%C3%A1skova_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Jiráskova.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Jir%C3%A1skova.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Jižní 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Ji%C5%BEn%C3%AD_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Jižní.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Ji%C5%BEn%C3%AD.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice K Obelisku 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_K_Obelisku_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice K Obelisku 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_K_Obelisku_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Karla Kofránka 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Karla_Kofr%C3%A1nka_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Karla Kofránka 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Karla_Kofr%C3%A1nka_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Karla Kofránka 05.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Karla_Kofr%C3%A1nka_05.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Karlova 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Karlova_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Klicperova 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Klicperova_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Klicperova 04.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Klicperova_04.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Klicperova.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Klicperova.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Kociánova 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Koci%C3%A1nova_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Kociánova 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Koci%C3%A1nova_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Kociánova 03.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Koci%C3%A1nova_03.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Kociánova.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Koci%C3%A1nova.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Kollárova 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Koll%C3%A1rova_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Komenského 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Komensk%C3%A9ho_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Levitova 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Levitova_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Levitova 03.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Levitova_03.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Luční 03.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Lu%C4%8Dn%C3%AD_03.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Macharova 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Macharova_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Macharova 03.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Macharova_03.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Macharova 04.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Macharova_04.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Maixnerova 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Maixnerova_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Maixnerova 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Maixnerova_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Maixnerova 03.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Maixnerova_03.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Maixnerova 04.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Maixnerova_04.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Maixnerova 05.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Maixnerova_05.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Maixnerova.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Maixnerova.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Malátova 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Mal%C3%A1tova_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Malátova 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Mal%C3%A1tova_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Malátova 03.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Mal%C3%A1tova_03.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Malátova 04.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Mal%C3%A1tova_04.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Malátova 07.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Mal%C3%A1tova_07.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Myslbekova 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Myslbekova_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Myslbekova 03.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Myslbekova_03.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Myslbekova 04.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Myslbekova_04.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Máchova 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_M%C3%A1chova_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Máchova 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_M%C3%A1chova_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Máchova 06.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_M%C3%A1chova_06.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Máchova.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_M%C3%A1chova.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Mánesova 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_M%C3%A1nesova_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Mánesova 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_M%C3%A1nesova_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Mánesova.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_M%C3%A1nesova.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Na Závisti 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Na_Z%C3%A1visti_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Na Závisti 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Na_Z%C3%A1visti_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Na Závisti 04.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Na_Z%C3%A1visti_04.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Na Závisti 05.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Na_Z%C3%A1visti_05.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Nerudova 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Nerudova_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Nerudova 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Nerudova_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Otakarova 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Otakarova_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Otakarova 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Otakarova_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Otakarova.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Otakarova.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Pelikánova 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Pelik%C3%A1nova_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Pod Invalidovnou 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Pod_Invalidovnou_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Pod Invalidovnou 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Pod_Invalidovnou_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Pod Invalidovnou 03.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Pod_Invalidovnou_03.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Pod Invalidovnou.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Pod_Invalidovnou.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Pod Lípou 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Pod_L%C3%ADpou_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Pod Lípou 03.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Pod_L%C3%ADpou_03.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Pod Lípou 04.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Pod_L%C3%ADpou_04.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Pod Lípou.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Pod_L%C3%ADpou.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Purkyňova 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Purky%C5%88ova_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Raisova 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Raisova_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Raisova 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Raisova_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Riegrova 04.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Riegrova_04.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Riegrova 07.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Riegrova_07.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Riegrova 08.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Riegrova_08.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Riegrova 09.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Riegrova_09.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Riegrova.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Riegrova.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Sladkovského 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Sladkovsk%C3%A9ho_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Sladkovského 04.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Sladkovsk%C3%A9ho_04.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Strozziho 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Strozziho_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Strozziho 05.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Strozziho_05.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Strozziho 06.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Strozziho_06.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Strozziho 07.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Strozziho_07.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Strozziho 08.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Strozziho_08.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Strozziho 09.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Strozziho_09.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Tovární 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Tov%C3%A1rn%C3%AD_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Tovární 03.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Tov%C3%A1rn%C3%AD_03.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Tovární.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Tov%C3%A1rn%C3%AD.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Tylova 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Tylova_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Tylova 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Tylova_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Tylova 04.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Tylova_04.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Táboritská.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_T%C3%A1boritsk%C3%A1.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Vikova 03.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Vikova_03.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Vikova.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Vikova.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Vrchlického 03.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Vrchlick%C3%A9ho_03.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Vrchlického 06.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Vrchlick%C3%A9ho_06.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Vrchlického.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Vrchlick%C3%A9ho.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Věnceslavy Lužické 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_V%C4%9Bnceslavy_Lu%C5%BEick%C3%A9_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Všehrdova 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_V%C5%A1ehrdova_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Všehrdova.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_V%C5%A1ehrdova.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Zborovská 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Zborovsk%C3%A1_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Zborovská 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_Zborovsk%C3%A1_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Čelakovského 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_%C4%8Celakovsk%C3%A9ho_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Čelakovského 03.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_%C4%8Celakovsk%C3%A9ho_03.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Čsl. armády 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_%C4%8Csl._arm%C3%A1dy_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Čsl. armády 04.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_%C4%8Csl._arm%C3%A1dy_04.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Šafaříkova.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_%C5%A0afa%C5%99%C3%ADkova.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Šalounova 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_%C5%A0alounova_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Šalounova 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_%C5%A0alounova_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Škroupova.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_%C5%A0kroupova.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Škrétova 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_%C5%A0kr%C3%A9tova_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Škrétova.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_%C5%A0kr%C3%A9tova.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Štorchova 03.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_%C5%A0torchova_03.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Štorchova 04.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_%C5%A0torchova_04.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Švajdlerova 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_%C5%A0vajdlerova_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Švestková 01.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_%C5%A0vestkov%C3%A1_01.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Švestková 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_%C5%A0vestkov%C3%A1_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Žerotínova 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_%C5%BDerot%C3%ADnova_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Žerotínova 04.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_%C5%BDerot%C3%ADnova_04.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Žerotínova 05.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_%C5%BDerot%C3%ADnova_05.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Žerotínova 06.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_%C5%BDerot%C3%ADnova_06.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Žerotínova 07.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_%C5%BDerot%C3%ADnova_07.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Žerotínova 08.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_%C5%BDerot%C3%ADnova_08.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Žižkova 02.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_%C5%BDi%C5%BEkova_02.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Žižkova 03.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_%C5%BDi%C5%BEkova_03.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Žižkova 06.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_%C5%BDi%C5%BEkova_06.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice - ulice Žižkova 08.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice_-_ulice_%C5%BDi%C5%BEkova_08.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28
+- [Hořice-Tyršovo náměstí-sokolovna2011a.jpg](https://commons.wikimedia.org/wiki/File%3AHo%C5%99ice-Tyr%C5%A1ovo_n%C3%A1m%C4%9Bst%C3%AD-sokolovna2011a.jpg) – Jirka23, CC BY-SA 3.0, 2011-05-08
+- [Kašna na náměstí Jiřího z Poděbrad v Hořicích.jpg](https://commons.wikimedia.org/wiki/File%3AKa%C5%A1na_na_n%C3%A1m%C4%9Bst%C3%AD_Ji%C5%99%C3%ADho_z_Pod%C4%9Bbrad_v_Ho%C5%99ic%C3%ADch.jpg) – Petr1888, CC BY-SA 4.0, 2020-07-28

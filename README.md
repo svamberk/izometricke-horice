@@ -19,7 +19,9 @@ Když vám izomapa ušetřila práci, autor nástroje bude rád za [kafe ☕](ht
   (Chlum, Dobrá Voda, Jeřice, Březovice, Libonice, Dachovy, Chvalina…).
 - **Automaticky z dat:** všechny budovy z OpenStreetMap, jejich výšky a tvar střech z laserového skenování ČÚZK,
   les podle ortofota, pole a louky ze ZABAGED, silnice včetně dálnice **D35** (hotový úsek od Hradce Králové
-  ke sjezdu Hořice; úsek ve výstavbě se nekreslí), mosty, auta, lampy, sochy.
+  ke sjezdu Hořice; úsek ve výstavbě se nekreslí), mosty, auta, lampy, sochy, obchody v přízemí (Overture Places).
+- **Barvy střech** všech budov z ortofota ČÚZK, **barvy fasád** asi 280 domů z volně licencovaných fotek ulic
+  na Wikimedia Commons ([docs/ZDROJE-FASAD.md](docs/ZDROJE-FASAD.md)).
 - **Ručně doladěné dominanty** (25 staveb, [assets/dominanty.json](assets/dominanty.json)) podle fotek
   z Wikimedia Commons, laseru ČÚZK a Památkového katalogu, např.:
   kostel Narození Panny Marie, radnice s věžičkou, bývalá spořitelna, Masarykova věž samostatnosti,
@@ -30,7 +32,7 @@ Když vám izomapa ušetřila práci, autor nástroje bude rád za [kafe ☕](ht
   ověřená fakta o stavbách: [docs/dominanty-podklady.md](docs/dominanty-podklady.md).
 
 > **Mapa není digitální dvojče.** Otevřená data mají chyby a část detailů (stromy, auta, lampy, barvy obyčejných domů)
-> se doplňuje podle pravidel. Známé chyby a nápady na zlepšení jsou v [docs/KONTROLA.md](docs/KONTROLA.md).
+> se doplňuje podle pravidel (fasády bez fotky mají barvu podle typu domu). Známé chyby a nápady na zlepšení jsou v [docs/KONTROLA.md](docs/KONTROLA.md).
 
 ## Jak přispět
 
@@ -89,9 +91,9 @@ a `index.html` nahraje až nakonec. Přihlašovací údaje bere ze souboru netrc
 | zdroj | co z něj je | licence |
 |---|---|---|
 | [OpenStreetMap](https://www.openstreetmap.org/copyright) přes [Overture Maps](https://overturemaps.org/) | budovy, adresy, ulice, voda, využití území | ODbL – © přispěvatelé OpenStreetMap |
-| [ČÚZK](https://geoportal.cuzk.cz/): DMP 1G, ortofoto, ZABAGED | výšky budov, les, pole a louky | CC BY 4.0 – © ČÚZK |
+| [ČÚZK](https://geoportal.cuzk.cz/): DMP 1G, ortofoto, ZABAGED | výšky budov, barvy střech, les, pole a louky | CC BY 4.0 – © ČÚZK |
 | [Terrarium](https://registry.opendata.aws/terrain-tiles/) (AWS Open Data) | terén | s uvedením zdroje |
-| [Wikimedia Commons](https://commons.wikimedia.org/) | fotky jako předloha dominant (v repozitáři nejsou) | dle jednotlivých fotek, viz [docs/ZDROJE-FOTEK.md](docs/ZDROJE-FOTEK.md) |
+| [Wikimedia Commons](https://commons.wikimedia.org/) | fotky jako předloha dominant a barev fasád (v repozitáři nejsou) | dle jednotlivých fotek, viz [docs/ZDROJE-FOTEK.md](docs/ZDROJE-FOTEK.md) a [docs/ZDROJE-FASAD.md](docs/ZDROJE-FASAD.md) |
 
 Kód je pod licencí **AGPL-3.0** jako původní izomapa (soubor [LICENSE](LICENSE)): kdo ho upraví a pustí jako web,
 musí zveřejnit i svoje úpravy. Patička nápovědy v mapě se zdroji dat a odkaz „Vytvořeno nástrojem izomapa“ musí zůstat.

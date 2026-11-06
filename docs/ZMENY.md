@@ -42,8 +42,33 @@ Obecně užitečné opravy (bezpečnost, Windows, dálnice) stojí za to nabídn
 - `render.mjs` předává okraje s řezem zeminou jen na vyžádání, jinak platí scéna (strany bez souseda),
   jak uvádí `render_chunk.sh`.
 
+- **Okna podle podlaží**: domy, činžáky a paneláky mají výšku pásu oken podle počtu podlaží (z dat nebo z laseru),
+  ne pevných 2,8–3,2 m. **Obchody v přízemí** (výlohy, v noci rozsvícené) u budov, kde je podle Overture Places
+  obchod nebo služba (bez čerpacích stanic, skladů, výroby).
+- `URBAN = True`: sevřená městská zástavba i v centrálním čtverci (Hořice).
+- Adresy ve vesnicích bez pojmenovaných ulic jako „Chlum 56“ (dřív jen číslo). Typy budov česky
+  (hospodářská budova, chata, trafostanice…), neznámý typ jako „budova“.
+
+## Barvy střech a fasád
+
+- **Střechy** (`nastroje/strechy.py`): barva každé budovy změřená z ortofota ČÚZK (0,25 m/px; osvětlená část
+  střechy bez zeleně a stínu) a převedená do palety mapy. Výsledek v `assets/satelit.json` (`rc`).
+- **Fasády** (`nastroje/fasady_fotky.py`, `nastroje/fasada_barva.py`, `nastroje/fasady_slouc.py`): barva zdí
+  asi 280 domů změřená z volně licencovaných fotek ulic na Wikimedia Commons. Každou fotku prošel agent (směr
+  pohledu, přiřazení domů k půdorysům, výběr čisté zdi bez oken a stínu) a druhý agent měření zkontroloval;
+  zamítnuté (špatný dům, zeď ve stínu) se nepoužily. Výsledek v `assets/upresneni.json` (`wc`), zdroje fotek
+  v [ZDROJE-FASAD.md](ZDROJE-FASAD.md). Street View, Mapy.cz ani jiné panoramy se nepoužívají (podmínky to zakazují).
+
+## Prohlížeč (`overlay.py`)
+
+- **Názvy obcí a částí** nad mapou (podle adres; místo s nejhustší zástavbou části), Hořice větším písmem.
+  Úvodní pohled tak ukazuje „Hořice“, ne název náměstí.
+
 ## Nástroje
 
 - `nastroje/dom_info.py` – podklady k dominantě (půdorys, laser, ortofoto, výřez renderu).
 - `nastroje/qa_tools.py` – mozaiky čtverců pro kontrolu, převod pixelu dlaždice na souřadnice, výřezy.
 - `nastroje/ftp_nahraj.py` – nahrání webu na FTP(S) hosting s vsftpd (znovupoužití TLS relace).
+- `nastroje/strechy.py`, `nastroje/strechy_lab.py` – barvy střech z ortofota (Lab, převod do palety).
+- `nastroje/fasady_fotky.py` (stažení fotek z Commons přes API, mapky kandidátů), `nastroje/fasada_barva.py`
+  (barva zdi z vyznačené části fotky), `nastroje/fasady_slouc.py` (sloučení měření do `assets/upresneni.json`).

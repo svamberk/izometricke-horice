@@ -671,7 +671,13 @@ CLS_CZ = {'house': 'rodinný dům', 'detached': 'rodinný dům', 'residential': 
           'commercial': 'komerční budova', 'church': 'kostel', 'chapel': 'kaple', 'kindergarten': 'mateřská škola',
           'shed': 'kůlna', 'barn': 'stodola', 'service': 'technická budova', 'office': 'kanceláře',
           'semidetached_house': 'dvojdům', 'terrace': 'řadový dům', 'bungalow': 'bungalov', 'hotel': 'hotel',
-          'dormitory': 'kolej', 'hospital': 'zdravotnictví', 'greenhouse': 'skleník', 'roof': 'přístřešek'}
+          'dormitory': 'kolej', 'hospital': 'zdravotnictví', 'greenhouse': 'skleník', 'roof': 'přístřešek',
+          'farm_auxiliary': 'hospodářská budova', 'farm': 'statek', 'cowshed': 'kravín', 'stable': 'stáj', 'sty': 'chlév',
+          'cabin': 'chata', 'hut': 'chatka', 'allotment_house': 'zahradní chatka', 'static_caravan': 'mobilní dům',
+          'transportation': 'dopravní stavba', 'train_station': 'nádraží', 'shelter': 'přístřešek', 'carport': 'přístřešek pro auto',
+          'transformer_tower': 'trafostanice', 'fire_station': 'hasičská zbrojnice', 'religious': 'náboženská stavba',
+          'villa': 'vila', 'sports_hall': 'sportovní hala', 'parking': 'parkovací dům', 'government': 'úřad', 'public': 'veřejná budova',
+          'college': 'vyšší odborná škola', 'kiosk': 'stánek', 'toilets': 'toalety', 'pavilion': 'altán', 'bunker': 'bunkr'}
 
 
 def hexcol(s, fallback):
@@ -734,7 +740,8 @@ addr = load('address')
 addr = addr[addr.geom.map(lambda g: EXT_P.contains(g))]
 addr_pts = list(addr.geom)
 addr_tree = shapely.STRtree(addr_pts)
-addr_txt = [f"{s} {n}" if isinstance(s, str) else str(n) for s, n in zip(addr.street, addr.number)]
+# adresa bez ulice (vesnice, osady): název osady + číslo popisné, např. „Chlum 74“
+addr_txt = [f"{s} {n}" if isinstance(s, str) else f"{c} {n}" if isinstance(c, str) else str(n) for s, n, c in zip(addr.street, addr.number, addr.postal_city)]
 
 buildings, binfo, chimneys = [], [], []
 bmask = Image.new('L', (TWE, TWE), 0); bmd = ImageDraw.Draw(bmask)
@@ -985,6 +992,21 @@ def polys_lines(g):
 TEN_WALLS = [(232, 206, 150), (226, 186, 160), (206, 214, 180), (236, 226, 200), (214, 196, 170), (204, 202, 196),
              (238, 214, 170), (220, 176, 146), (196, 208, 214), (230, 220, 210)]
 TEN_ROOFS = [(70, 72, 80), (96, 64, 52), (150, 62, 44), (60, 64, 72), (128, 60, 46), (84, 88, 96)]
+# výlohy: budovy s obchodem, restaurací nebo službou podle Overture places (bod v půdorysu, jinak nejbližší budova do 8 m)
+SHOP_TOP = ('shopping', 'food_and_drink')                         # Overture taxonomy: obchody a gastro
+SHOP_NOT = ('brewery', 'gas_station', 'warehouse_club_store', 'vehicle_dealer', 'manufacturer')
+SHOP_SVC = ('personal_or_beauty_service', 'financial_service', 'bank_or_credit_union', 'travel_service', 'printing_service',
+            'shipping_or_delivery_service', 'pharmacy_and_drug_store', 'wellness_service', 'vision_or_eye_care_clinic')
+SHOP_IDS = set()
+if os.path.exists('data/places.parquet'):
+    _bg = list(bld.geom); _bt = shapely.STRtree(_bg); _bid = list(bld.id)
+    for q in pq.read_table('data/places.parquet', columns=['geometry', 'basic_category', 'taxonomy', 'confidence']).to_pylist():
+        cat = q['basic_category'] or ''; top = ((q['taxonomy'] or {}).get('hierarchy') or [''])[0]
+        if (q['confidence'] or 0) < 0.6 or cat in SHOP_NOT or not (top in SHOP_TOP or cat in SHOP_SVC): continue
+        _pt = shapely.from_wkb(q['geometry']); _P = Point(*(float(v) for v in to_local(_pt.x, _pt.y)))
+        hit = [k for k in _bt.query(_P, predicate='intersects')] or sorted(_bt.query(_P, predicate='dwithin', distance=8), key=lambda k: _bg[k].distance(_P))[:1]
+        SHOP_IDS.update(_bid[k] for k in hit)
+print('budov s obchodem', len(SHOP_IDS))
 squares = [r.geom for _, r in lu.iterrows() if (sname(r) or '').startswith('náměstí doktora Edvarda Beneše')]
 GND_DOM = {}
 for _, r in bld.iterrows():
@@ -1007,7 +1029,7 @@ for _, r in bld.iterrows():
         if not own and not CLIP.contains(cen): continue         # těžiště mimo mapu: budova nikomu nepatří
         if not CLIP.buffer(-1.0).contains(p): p = p.intersection(CLIP.buffer(-1.0))   # ořez jen na okraji mapy
         if p.geom_type != 'Polygon': continue
-        URBAN = geo.chunk_of(cen.x + CX, cen.y + CY) != (0, 0)
+        URBAN = True        # Hořice: i centrum (čtverec 0,0) je sevřená městská zástavba; v Liberci byl centrální čtverec vyřazený
         p = p.simplify(0.2)
         if p.area < 6 or not p.is_valid: continue
         p = shapely.geometry.polygon.orient(p, 1.0)
@@ -1129,6 +1151,13 @@ for _, r in bld.iterrows():
         b = {'p': ring, 'b': round(base, 2), 'g': round(gnd, 2), 'e': round(gnd + eave, 2), 'r': rs, 'rh': round(roofh, 2),
              'parts': parts, 'wc': wc, 'rc': rc, 's': style, 'id': bid}
         if lm: b['lm'] = lm
+        if not lm and style in (0, 1, 11):
+            # výška patra = zeď / počet podlaží na zdi (podlaží z RÚIAN přes OSM; podkroví ve šikmé střeše se nepočítá)
+            n = floors
+            if n and rs != 'flat' and eave / n < 2.5: n -= 1
+            if not n: n = round(eave / 3.0)
+            if n >= 1: b['fh'] = round(min(4.6, max(2.4, eave / n)), 2)
+            if style in (0, 1) and r.id in SHOP_IDS: b['shop'] = 1     # obchod v přízemí: výlohy
         if dsp:
             b['dn'] = dom['name']
             if dsp.get('canopy'): b['cn'] = dsp['canopy']
@@ -1211,7 +1240,7 @@ for _, r in bld.iterrows():
         if dsp:
             top_ = b['e'] + (b['rh'] if b['r'] != 'flat' else 0.0)
             if b.get('dz'): top_ = max(top_, b['e'] + max(q[6] for q in b['dz']))
-        binfo.append({'id': bid, 'oid': key, 'name': nm, 'cls': CLS_CZ.get(c, 'budova' if not c else c), 'floors': floors,
+        binfo.append({'id': bid, 'oid': key, 'name': nm, 'cls': CLS_CZ.get(c, 'budova'), 'floors': floors,
                       'h': round(total, 1), 'roof': rs, 'addr': adrs, 'lon': round(float(lon), 6), 'lat': round(float(lat), 6),
                       'ring': ring_, 'top': round(top_, 2), 'base': round(base, 2)})
 # samostatné stavby dominant (zřícenina, rozhledna): jen věž na bodu dominanty
