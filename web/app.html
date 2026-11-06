@@ -945,6 +945,31 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
     const stopS = t.stops.map(([sx, sy]) => { let best = 0, bd = 1e18; r.p.forEach((p, i) => { const d = (p[0] - sx) ** 2 + (p[1] - sy) ** 2; if (d < bd) { bd = d; best = i; } }); return len[best]; });
     return Array.from({ length: t.n }, (_, j) => ({ r, s: r.L * (j + 0.5) / t.n, dir: j % 2 ? -1 : 1, v: 8, wait: 0, stopS }));
   });
+  // motorky na závodním okruhu (overlay.json moto, Hořice: 300 zatáček Gustava Havla): jezdí dokola ve směru závodu,
+  // před zatáčkami brzdí a za nimi zrychlují (rychlost podle poloměru zatáčky), každá trochu jinak rychle a jinou stopou
+  const MOTOC = [[[214, 40, 40], [30, 30, 34], [240, 240, 240]], [[30, 90, 200], [240, 240, 240], [250, 200, 30]], [[250, 200, 20], [30, 30, 34], [214, 40, 40]],
+    [[30, 160, 80], [30, 30, 34], [240, 240, 240]], [[240, 240, 240], [214, 40, 40], [30, 90, 200]], [[245, 120, 20], [30, 30, 34], [245, 120, 20]],
+    [[24, 24, 28], [214, 40, 40], [250, 200, 20]], [[120, 60, 200], [240, 240, 240], [30, 30, 34]]];
+  const motos = (() => {
+    const m = OV.moto; if (!m || m.w.length < 3) return [];
+    const w = m.w, n = w.length, len = [0];
+    for (let i = 1; i < n; i++) len.push(len[i - 1] + Math.hypot(w[i][0] - w[i - 1][0], w[i][1] - w[i - 1][1]));
+    const r = { w, p: w.map(([x, y]) => { const h = gz(x, y); return [...toImg(x, y, h), depth(x, y, h)]; }), len, L: len[n - 1] };
+    const at = (s) => { const o = along(r, ((s % r.L) + r.L) % r.L); return [o.x, o.y]; };
+    const V = len.map((s) => {                             // poloměr zatáčky z úhlu na 2 × 15 m -> rychlost (m/s, zpomaleno na ~70 %)
+      const a = at(s - 15), b = at(s), c = at(s + 15);
+      let d = Math.abs(Math.atan2(c[1] - b[1], c[0] - b[0]) - Math.atan2(b[1] - a[1], b[0] - a[0])); if (d > Math.PI) d = 2 * Math.PI - d;
+      return Math.min(42, Math.max(9, Math.sqrt(7 * 15 / Math.max(d, 1e-3))));
+    });
+    for (let k = 0; k < 2; k++) {                          // brzdění před zatáčkou (6 m/s²) a zrychlení za ní (4 m/s²), přes start dokola
+      for (let i = n - 2; i >= 0; i--) V[i] = Math.min(V[i], Math.sqrt(V[i + 1] ** 2 + 12 * (len[i + 1] - len[i])));
+      V[n - 1] = V[0] = Math.min(V[0], V[n - 1]);
+      for (let i = 1; i < n; i++) V[i] = Math.min(V[i], Math.sqrt(V[i - 1] ** 2 + 8 * (len[i] - len[i - 1])));
+      V[0] = V[n - 1] = Math.min(V[0], V[n - 1]);
+    }
+    r.vAt = (s) => { let i = 1; while (i < n - 1 && len[i] < s) i++; const t = (s - len[i - 1]) / ((len[i] - len[i - 1]) || 1); return V[i - 1] + (V[i] - V[i - 1]) * Math.max(0, Math.min(1, t)); };
+    return Array.from({ length: m.n }, (_, j) => ({ r, s: r.L * (j / m.n) + rnd(j + 0.3) * 60, f: 0.93 + rnd(j + 0.7) * 0.07, t: (rnd(j + 0.9) - 0.5) * 2.4, col: 'm' + j }));
+  })();
   // MHD podle jízdních řádů GTFS (site/mhd.json z mhd.py): poloha každého spoje podle skutečného času
   const MHD = { on: false, act: [], t: -1, drawn: [], follow: null };
   fetch('mhd.json' + VER).then((r) => r.json()).then((m) => {
@@ -1022,7 +1047,7 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
       }
     }
   });
-  if (location.hostname === 'localhost') window.__izo = { trams, skiers, MHD, mhdActive, mhdPos };       // ladění v lokálním náhledu
+  if (location.hostname === 'localhost') window.__izo = { trams, skiers, MHD, mhdActive, mhdPos, motos, along, toImg, viewer, W };       // ladění v lokálním náhledu
   function drawSkier(q, sx, ox, oy) {
     const L = q.r.len; let i = 1; while (i < L.length - 1 && L[i] < q.s) i++;
     const a = q.r.w[i - 1], b = q.r.w[i], t = Math.max(0, Math.min(1, (q.s - L[i - 1]) / ((L[i] - L[i - 1]) || 1)));
@@ -1050,7 +1075,7 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
   const lit = (rgb, d) => { const f = (0.62 + 0.42 * Math.max(0, d)) / 0.88; return `rgb(${rgb.map((q) => Math.min(255, Math.round(q * f))).join(',')})`; };
   const VEH = new Map(), NDIR = 48;
   function vehicleSprite(col, k, isBus, len, wid, snowy) {
-    const key = `${col}|${k}|${isBus ? +isBus : 0}|${snowy ? 1 : 0}`;      // isBus: 1 autobus, 2 tramvaj
+    const key = `${col}|${k}|${isBus ? +isBus : 0}|${snowy ? 1 : 0}`;      // isBus: 1 autobus, 2 tramvaj, 3 závodní motorka
     if (VEH.has(key)) return VEH.get(key);
     const a = k / NDIR * Math.PI * 2, fx_ = Math.cos(a), fy_ = Math.sin(a), sxv = -fy_, syv = fx_;
     const O = toImg(0, 0, 0), R = (s, t, h) => { const p = toImg(fx_ * s + sxv * t, fy_ * s + syv * t, h); return [p[0] - O[0], p[1] - O[1]]; };
@@ -1064,7 +1089,7 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
     };
     const c = rgbOf(col), DARK = [31, 31, 33], GLASS = [71, 87, 107], snow = snowy ? [238, 242, 248] : null;
     const near = vis(sxv, syv) ? 1 : -1;                                     // strana přivrácená ke kameře
-    const wheels = (side) => { if (isBus === 2) return; for (const s_ of isBus ? [-l + 2.6, l - 3.0] : [-1.35, 1.35]) box(s_ - (isBus ? 0.48 : 0.32), s_ + (isBus ? 0.48 : 0.32), side * (w - 0.06) - 0.1, side * (w - 0.06) + 0.1, 0, isBus ? 0.8 : 0.62, DARK); };
+    const wheels = (side) => { if (isBus >= 2) return; for (const s_ of isBus ? [-l + 2.6, l - 3.0] : [-1.35, 1.35]) box(s_ - (isBus ? 0.48 : 0.32), s_ + (isBus ? 0.48 : 0.32), side * (w - 0.06) - 0.1, side * (w - 0.06) + 0.1, 0, isBus ? 0.8 : 0.62, DARK); };
     wheels(-near);
     if (isBus === 2) {                                                      // tramvaj T3: zkosená čela, zaoblená střecha, okna se sloupky
       const WH = [236, 238, 232], GR = [34, 138, 90], OR = [234, 150, 38], YE = [238, 196, 40], ROOF = snow || [214, 218, 212];
@@ -1088,12 +1113,19 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
       for (let i = 0; i < fp.length; i++) {                                 // zaoblená hrana střechy
         const A = fp[i], B = fp[(i + 1) % fp.length], a = ip[i], b = ip[(i + 1) % fp.length], es = B[0] - A[0], et = B[1] - A[1], el = Math.hypot(es, et);
         const nx = fx_ * et / el - sxv * es / el, ny = fy_ * et / el - syv * es / el;
-        if (nx + ny >= 0.3) continue;
+        if (nx * Z[0] - ny * Z[2] <= -0.3 * Math.hypot(Z[0], Z[2]) / Math.SQRT2) continue;
         faces.push([[R(A[0], A[1], 2.98), R(B[0], B[1], 2.98), R(b[0], b[1], rz), R(a[0], a[1], rz)], lit(snow || WH, sun(nx * 0.6, ny * 0.6, 0.8))]);
       }
       faces.push([ip.map(([s_, t_]) => R(s_, t_, rz)), lit(ROOF, sun(0, 0, 1))]);
       box(-0.9, 0.7, -0.45, 0.45, rz, rz + 0.15, [92, 94, 100]);
       box(-0.5, 0.4, -0.06, 0.06, rz + 0.15, rz + 0.75, YE); box(-0.05, 0.35, -0.06, 0.06, rz + 0.6, rz + 1.05, YE); box(0.15, 0.3, -0.75, 0.75, rz + 1.0, rz + 1.08, YE);
+    } else if (isBus === 3) {                                               // závodní motorka s jezdcem v předklonu (col = 'm<i>': barvy týmu)
+      const [BODY, SUIT, HELM] = MOTOC[+col.slice(1) % MOTOC.length];
+      box(-l + 0.05, -l + 0.6, -0.07, 0.07, 0, 0.62, DARK); box(l - 0.6, l - 0.05, -0.07, 0.07, 0, 0.62, DARK);   // kola
+      box(-l + 0.35, l - 0.25, -0.2, 0.2, 0.3, 0.8, BODY);                // kapotáž
+      box(-l + 0.3, -0.05, -0.22, 0.22, 0.8, 1.05, SUIT);                  // jezdec
+      box(-0.25, 0.3, -0.2, 0.2, 0.95, 1.18, SUIT);
+      box(0.2, 0.5, -0.15, 0.15, 1.05, 1.35, HELM);                        // přilba
     } else if (isBus) {                                                     // autobus: bílý, zelený a žlutý pruh, tmavá okna, žluté čelo
       const WH = [238, 238, 234], GR = [30, 140, 84], YL = [244, 196, 28], GL = [40, 44, 52], DOOR = [54, 58, 66], ROOF = snow || [222, 224, 220];
       const ch = 0.45, fp = [[-l + ch, -w], [l - ch, -w], [l, -w + ch], [l, w - ch], [l - ch, w], [-l + ch, w], [-l, w - ch], [-l, -w + ch]];
@@ -1120,7 +1152,7 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
       for (let i = 0; i < fp.length; i++) {
         const A = fp[i], B = fp[(i + 1) % fp.length], a = ip[i], b = ip[(i + 1) % fp.length], es = B[0] - A[0], et = B[1] - A[1], el = Math.hypot(es, et);
         const ns = et / el, nx = fx_ * ns - sxv * es / el, ny = fy_ * ns - syv * es / el;
-        if (nx + ny >= 0.3) continue;
+        if (nx * Z[0] - ny * Z[2] <= -0.3 * Math.hypot(Z[0], Z[2]) / Math.SQRT2) continue;
         faces.push([[R(A[0], A[1], 2.95), R(B[0], B[1], 2.95), R(b[0], b[1], rz + 0.08), R(a[0], a[1], rz + 0.08)], lit(ns > 0.5 ? YL : (snow || WH), sun(nx * 0.6, ny * 0.6, 0.8))]);
       }
       faces.push([ip.map(([s_, t_]) => R(s_, t_, rz + 0.08)), lit(ROOF, sun(0, 0, 1))]);
@@ -1362,6 +1394,13 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
         if (sx <= 0.12) continue;
         const o = along(tr.r, tr.s); o.dirSign = tr.dir;
         if (vis(o.ix, o.iy, 120)) drawVehicle(o, 15, 2.5, 't3', sx, ox, oy, night, 2);
+      }
+      if (!snowy) for (const q of motos) {                    // závodní motorky (v zimě ne)
+        q.s = (q.s + q.r.vAt(q.s) * q.f * dt) % q.r.L;
+        if (sx <= 0.25) continue;
+        const o = along(q.r, q.s), dl = Math.hypot(o.dx, o.dy) || 1;
+        o.x -= o.dy / dl * (1.6 + q.t); o.y += o.dx / dl * (1.6 + q.t);   // stopa: střed silnice ± 1,2 m (drawVehicle posouvá o 1,6 m vpravo)
+        if (vis(o.ix, o.iy, 60)) drawVehicle(o, 2.1, 0.8, q.col, sx, ox, oy, night, 3);
       }
     }
     // lyžaři (jen v zimě)

@@ -260,7 +260,14 @@ for a_n, b_n, n_ in TRAM_LINES:
     trams.append({'w': [[round(x, 1), round(y, 1)] for x, y, z in pts], 'p': [list(px(x, y, z)) for x, y, z in pts], 'n': n_,
                   'stops': [list(px(TSTOP[n][0], TSTOP[n][1], 0)[:2]) + [n] for n in st]})
     print('tramvaj', a_n, '–', b_n, round(sum(math.hypot(x1 - x0, y1 - y0) for (x0, y0), (x1, y1) in zip(on, on[1:]))), 'm', len(st), 'zastávek')
-json.dump({'w': W, 'h': H, 'cam': cam, 'districts': districts, 'needs': needs, 'xmas': nam, 'chunks': {CKEY[c]: CHUNKS[c] for c in chunks}, 'bus': bus_route, 'trams': trams, 'decks': decks,
+# závodní okruh (assets/okruh.json z nastroje/okruh.py): motorky v prohlížeči jezdí po trase ve směru závodu
+moto = None
+if os.path.exists('assets/okruh.json'):
+    _ok = json.load(open('assets/okruh.json', encoding='utf-8'))
+    _w = [tuple(float(v) for v in to_local(lon, lat)) for lat, lon in _ok['trasa']]
+    moto = {'nazev': _ok['nazev'], 'n': _ok.get('motorek', 8), 'w': [[round(x, 1), round(y, 1)] for x, y in _w]}   # body obrazu dopočítá prohlížeč
+    print('okruh', _ok['nazev'], len(_w), 'bodů,', moto['n'], 'motorek')
+json.dump({'w': W, 'h': H, 'cam': cam, 'districts': districts, 'needs': needs, 'xmas': nam, 'chunks': {CKEY[c]: CHUNKS[c] for c in chunks}, 'bus': bus_route, 'trams': trams, 'decks': decks, 'moto': moto,
            'streets': streets, 'places': places},
           open(f'{SITE}/overlay.json', 'w'), separators=(',', ':'), ensure_ascii=False)
 json.dump(addr_index, open(f'{SITE}/search.json', 'w'), separators=(',', ':'), ensure_ascii=False)   # adresy pro hledání, načte se až při psaní

@@ -23,6 +23,8 @@ Když vám izomapa ušetřila práci, autor nástroje bude rád za [kafe ☕](ht
 - **Barvy střech** všech budov z ortofota ČÚZK, **barvy fasád** asi 280 domů z volně licencovaných fotek ulic
   na Wikimedia Commons ([docs/ZDROJE-FASAD.md](docs/ZDROJE-FASAD.md)).
 - **Otáčení mapy** po 90° (pohled od jihozápadu, severozápadu, severovýchodu a jihovýchodu), střelka ukazuje sever.
+- **Motorky na okruhu 300 zatáček Gustava Havla** (5,1 km po silnicích II/501, III/3003 a II/300, po směru hodinových
+  ručiček jako při závodě): trasa z OpenStreetMap ([nastroje/okruh.py](nastroje/okruh.py) → `assets/okruh.json`).
 - **Ručně doladěné dominanty** (25 staveb, [assets/dominanty.json](assets/dominanty.json)) podle fotek
   z Wikimedia Commons, laseru ČÚZK a Památkového katalogu, např.:
   kostel Narození Panny Marie, radnice s věžičkou, bývalá spořitelna, Masarykova věž samostatnosti,

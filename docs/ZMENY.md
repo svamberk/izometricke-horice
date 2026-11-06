@@ -74,6 +74,10 @@ Obecně užitečné opravy (bezpečnost, Windows, dálnice) stojí za to nabídn
 
 ## Prohlížeč (`overlay.py`)
 
+- **Závodní motorky**: `assets/okruh.json` (trasa okruhu z OSM, `nastroje/okruh.py`) -> `overlay.json` `moto`. V prohlížeči
+  jezdí 8 motorek dokola ve směru závodu, rychlost podle poloměru zatáček (brzdění a zrychlení), každá jinou stopou.
+  Patří k vrstvě Doprava, v zimě nejezdí. Hořice: 300 zatáček Gustava Havla, po směru hodinových ručiček.
+
 - **Názvy obcí a částí** nad mapou (podle adres; místo s nejhustší zástavbou části), Hořice větším písmem.
   Úvodní pohled tak ukazuje „Hořice“, ne název náměstí.
 
