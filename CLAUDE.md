@@ -48,7 +48,8 @@ Automaticky z dat vyjde celé město. Ručně je potřeba:
   - `win` 16 novogotika (hrotitá okna, lizény), 17 novorenesance (bosované přízemí, šambrány, volská oka); věž `top` `gotic`
     (ochoz s fiálami), `in` odsazení věže od průčelí (0 = líc fasády), `wc` barva věže;
     `lisenes` {`on` [front/left/right/n/s/e/w], `sides` nebo `sp` (rozteč os), `w`, `d`, `z0`, `top` pinnacle/vase, `th`, `col`},
-    `balconies` [{`side`, `w`, `z`, `d`}] na průčelí. Po úpravě dominant v jednom čtverci: `./postav_ctverec.sh i,j` (všechny pohledy).
+    `balconies` [{`side`, `w`, `z`, `d`, `rail` iron/solid, `col`}] na průčelí, `signs` [{`side`, `w`, `z`, `h`, `d`, `col`, `col2` spodní pruh,
+    `text` ('@' = logo), `panels` [[barva, šířka]…] výlohy pod štítem, `frame` barva rámů, `pz` výška výloh}] vývěsní štít, `nastavba` {`inset`, `h`, `wc`, `rc`} ustoupené horní patro, `shop` výlohy, `fh` výška patra. Po úpravě dominant v jednom čtverci: `./postav_ctverec.sh i,j` (všechny pohledy).
   Napárování na budovu: bod uvnitř půdorysu, jinak největší budova do 25 m (`match_doms` v `prep.py`).
   Ukázka je v `priklady/dominanty.json`.
 - **Příběhy míst** → `mista.json`: `[{"nazev", "lat", "lon", "text"}]`. Texty piš jen z ověřených zdrojů (web obce,

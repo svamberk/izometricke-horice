@@ -55,8 +55,12 @@ Obecně užitečné opravy (bezpečnost, Windows, dálnice) stojí za to nabídn
   okny, lizénami s fiálami, balkonem a věží s ochozem a čtyřmi fiálami; **spořitelna** s bosovaným přízemím, šambránami,
   volskými oky, pilastry s vázami a dvěma balkony; **Mariánský sloup** jako model (stupně, podstavec, tři světci, sloup,
   Panna Marie se svatozáří); nová **kašna** (šestiboká nádrž s vodou a sousoším, půdorys z OSM/Overture); **pranýř** před
-  radnicí; **nárožní dům čp. 156** s věžičkou a modrou cibulovou bání; výlohy v přízemí čp. 154.
-- Nové prvky specifikace dominant (`prep.py`, `render.html`): styly oken 16 a 17, věž `gotic`, `lisenes`, `balconies`,
+  radnicí; **nárožní dům čp. 156** s věžičkou a modrou cibulovou bání.
+- **Potraviny a pekárna Švamberk (čp. 153–154)** podle fotek výloh od majitele: štít ESO market (červený pás s bílými
+  písmeny a logy, modrý pruh; písmena v noci svítí), výlohy s oranžovými rámy a polepy, lodžie nad obchodem.
+  Fotky z Google Street View ani Mapy.cz se nepoužívají (podmínky to zakazují).
+- Nové prvky specifikace dominant (`prep.py`, `render.html`): styly oken 16 a 17, věž `gotic`, `lisenes`, `balconies`
+  (i plné zábradlí lodžií), `signs` (vývěsní štít s nápisem a výlohy), `nastavba` (ustoupené horní patro), `shop` a `fh`,
   `model` pro samostatné objekty, odsazení a barva věže; upřesnění `shop` v `assets/upresneni.json`.
 - `postav_ctverec.sh i,j`: přestaví jeden čtverec ve všech čtyřech pohledech.
 

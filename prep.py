@@ -744,6 +744,7 @@ addr_tree = shapely.STRtree(addr_pts)
 addr_txt = [f"{s} {n}" if isinstance(s, str) else f"{c} {n}" if isinstance(c, str) else str(n) for s, n, c in zip(addr.street, addr.number, addr.postal_city)]
 
 buildings, binfo, chimneys = [], [], []
+NAST = []          # ustoupená horní patra dominant ('nastavba'), přidají se jako samostatné budovy
 bmask = Image.new('L', (TWE, TWE), 0); bmd = ImageDraw.Draw(bmask)
 # centrum a další městské čtverce: činžáky v sevřených blocích (dům sdílí zeď se sousedem) mají šikmé střechy;
 # rozhoduje čtverec, kterému budova patří (těžiště), aby vypadala stejně i v sousedním čtverci
@@ -1186,6 +1187,8 @@ for _, r in bld.iterrows():
             if style in (0, 1) and (r.id in SHOP_IDS or so.get('shop')): b['shop'] = 1     # obchod v přízemí: výlohy (places nebo upřesnění)
         if dsp:
             b['dn'] = dom['name']
+            if dsp.get('shop'): b['shop'] = 1                          # výlohy v přízemí
+            if dsp.get('fh'): b['fh'] = float(dsp['fh'])                 # výška patra pro okna
             if dsp.get('canopy'): b['cn'] = dsp['canopy']
             for blk in dsp.get('blocks', []):
                 o = p.minimum_rotated_rectangle; cs = list(o.exterior.coords)[:3]
@@ -1206,7 +1209,18 @@ for _, r in bld.iterrows():
                 b['lis'] = facade_points(p, dsp, ls)
             for bl in (dsp.get('balconies', []) if pi == tw_piece else []):   # balkony na průčelí
                 fx_, fy_, fa = facade_points(p, dsp, {'sides': [bl['side']], 'on': ['front']})[0]
-                b.setdefault('bal', []).append([fx_, fy_, fa, bl.get('w', 3.0), round(gnd + bl['z'], 2), bl.get('d', 0.9)])
+                b.setdefault('bal', []).append([fx_, fy_, fa, bl.get('w', 3.0), round(gnd + bl['z'], 2), bl.get('d', 0.9),
+                                                bl.get('rail', 'iron'), list(bl.get('col', [184, 158, 117]))])
+            for sg in (dsp.get('signs', []) if pi == tw_piece else []):    # vývěsní štít na průčelí: pás barvy a světlá písmena
+                fx_, fy_, fa = facade_points(p, dsp, {'sides': [sg['side']], 'on': ['front']})[0]
+                b.setdefault('sgn', []).append({**sg, 'x': fx_, 'y': fy_, 'a': fa, 'z': round(gnd + sg['z'], 2)})   # barvy, text, výlohy viz render.html
+            if dsp.get('nastavba') and pi == tw_piece:                    # ustoupené horní patro (vlastní barva, plochá střecha)
+                nv = dsp['nastavba']; q_ = p.buffer(-nv.get('inset', 1.5), join_style=2).simplify(0.2)
+                if q_.geom_type == 'Polygon' and q_.area > 20:
+                    q_ = shapely.geometry.polygon.orient(q_, 1.0); ez = gnd + eave
+                    NAST.append({'p': [[round(x, 2), round(y, 2)] for x, y in list(q_.exterior.coords)[:-1]], 'b': round(ez - 0.3, 2), 'g': round(ez, 2),
+                                 'e': round(ez + nv['h'], 2), 'r': 'flat', 'rh': 0.0, 'parts': [], 'wc': tuple(nv.get('wc', wc)), 'rc': tuple(nv.get('rc', rc)),
+                                 's': 0, 'fh': nv['h'], **({'gh': 1} if not own else {})})
             if dsp.get('skylights') and pi == tw_piece:          # světlíky na ploché střeše
                 inner = p.buffer(-6.0)
                 if not inner.is_empty:
@@ -1276,6 +1290,7 @@ for _, r in bld.iterrows():
         binfo.append({'id': bid, 'oid': key, 'name': nm, 'cls': CLS_CZ.get(c, 'budova'), 'floors': floors,
                       'h': round(total, 1), 'roof': rs, 'addr': adrs, 'lon': round(float(lon), 6), 'lat': round(float(lat), 6),
                       'ring': ring_, 'top': round(top_, 2), 'base': round(base, 2)})
+for nb in NAST: nb['id'] = len(buildings); buildings.append(nb)
 # samostatné stavby dominant (zřícenina, rozhledna): jen věž na bodu dominanty
 for d in DOMS:
     sp = d['spec']

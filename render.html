@@ -805,11 +805,37 @@ function roofDeco(b, X, eave, rc) {
         }
       }
     }
-    for (const [x, y, ao, bw, z, bd] of b.bal || []) {                 // balkon: kamenná deska, železné zábradlí
-      const f = frameAt(x, y, 0, ao), IRON = [0.17, 0.17, 0.19], SL = [0.72, 0.62, 0.46];
+    for (const [x, y, ao, bw, z, bd, rail, bc] of b.bal || []) {     // balkon: deska a železné zábradlí, nebo plné zábradlí lodžie
+      const f = frameAt(x, y, 0, ao), IRON = [0.17, 0.17, 0.19], SL = C255(bc || [184, 158, 117]);
       pushBox(X, f, -0.05, bd, -bw / 2, bw / 2, z - 0.25, z, SL, [0, 1, 1, 0]);
+      if (rail === 'solid') { pushBox(X, f, bd - 0.12, bd, -bw / 2, bw / 2, z, z + 0.95, SL, [0, 1, 1, 0]); continue; }
       pushBox(X, f, bd - 0.06, bd, -bw / 2, bw / 2, z, z + 1.0, IRON, [0, 1, 0, 0]);
       for (const sg of [-1, 1]) pushBox(X, f, -0.05, bd, sg * bw / 2 - 0.03, sg * bw / 2 + 0.03, z, z + 1.0, IRON, [0, 1, 0, 0]);
+    }
+    for (const g of b.sgn || []) {                                     // vývěsní štít a výlohy obchodu (spec 'signs')
+      const f = frameAt(g.x, g.y, 0, g.a), sw = g.w, z = g.z, sh = g.h || 0.9, sd = g.d || 0.14, text = g.text || '', aw = [0, 1, 1, 0];
+      const lo = g.col2 ? sh * 0.36 : 0, WH = [0.97, 0.96, 0.94];
+      if (g.col2) pushBox(X, f, -0.02, sd, -sw / 2, sw / 2, z, z + lo, C255(g.col2), aw);             // spodní pruh (modrý)
+      pushBox(X, f, -0.02, sd, -sw / 2, sw / 2, z + lo, z + sh, C255(g.col), aw);
+      if (g.col2) pushBox(X, f, sd, sd + 0.01, -sw / 2, sw / 2, z + lo - 0.04, z + lo + 0.04, WH, [0, 1, 0, 0]);   // bílá linka
+      const n = text.length, pitch = n ? (sw - 0.4) / n : 0;
+      for (let i = 0; i < n; i++) {                                    // písmena světlé obdélníčky ('@' = logo: bílý ovál přes celou výšku)
+        const t0 = -sw / 2 + 0.2 + i * pitch;
+        if (text[i] === '@') pushBox(X, f, sd, sd + 0.04, t0 + pitch * 0.05, t0 + pitch * 0.95, z + 0.08, z + sh - 0.08, WH, [0.9, 1, 0, 0]);
+        else if (text[i] !== ' ') pushBox(X, f, sd, sd + 0.03, t0 + pitch * 0.18, t0 + pitch * 0.82, z + lo + (sh - lo) * 0.2, z + lo + (sh - lo) * 0.8, WH, [0.9, 1, 0, 0]);
+      }
+      if (g.panels) {                                                  // výlohy: barevné rámy a polepy oken (panely zleva doprava)
+        const z0 = g.z - (g.pz || 2.3), fr = C255(g.frame || [235, 110, 35]), W_ = g.panels.reduce((a, q) => a + (q[1] || 1.7), 0);
+        let t = -W_ / 2;
+        pushBox(X, f, -0.02, 0.1, -W_ / 2 - 0.08, W_ / 2 + 0.08, z0 - 0.12, z0, fr, aw);
+        pushBox(X, f, -0.02, 0.1, -W_ / 2 - 0.08, W_ / 2 + 0.08, g.z - 0.1, g.z, fr, aw);
+        for (const [col, pw = 1.7] of g.panels) {
+          pushBox(X, f, -0.02, 0.06, t + 0.06, t + pw - 0.06, z0, g.z - 0.1, C255(col), [0, 1, 0, 0]);
+          pushBox(X, f, -0.02, 0.1, t - 0.06, t + 0.06, z0, g.z - 0.1, fr, [0, 1, 0, 0]);
+          t += pw;
+        }
+        pushBox(X, f, -0.02, 0.1, t - 0.06, t + 0.06, z0, g.z - 0.1, fr, [0, 1, 0, 0]);
+      }
     }
     if (b.mdl) model(b);
     for (const [cx, cy, ang, L, Wd, top, rc] of b.blk || []) {        // nástavba (jeviště divadla)

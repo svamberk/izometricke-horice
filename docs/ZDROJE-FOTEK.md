@@ -104,4 +104,5 @@ Do mapy ani do repozitáře se nevkládají. Autor a licence každé fotky:
 - 13.jpg – Petr1888, CC BY-SA 3.0 – https://commons.wikimedia.org/wiki/File:Spo%C5%99itelna_(Ho%C5%99ice)_01.JPG
 - 14.jpg – Noe, CC0 – https://commons.wikimedia.org/wiki/File:Pran%C3%BD%C5%99_p%C5%99ed_radnic%C3%AD_v_Ho%C5%99ic%C3%ADch_(Q94444588)_01.jpg
 - 15.jpg – Noe, CC0 – https://commons.wikimedia.org/wiki/File:Pran%C3%BD%C5%99_p%C5%99ed_radnic%C3%AD_v_Ho%C5%99ic%C3%ADch_(Q94444588)_02.jpg
+- výlohy Potravin a pekárny Švamberk (čp. 153–154) – dvě fotky od majitele obchodu, předloha pro štít, výlohy a lodžie (nezveřejňují se)
 - (fotky ulic z docs/ZDROJE-FASAD.md: Hořice - náměstí Jiřího z Poděbrad 01–06, Kašna na náměstí Jiřího z Poděbrad v Hořicích – Petr1888, CC BY-SA 4.0)

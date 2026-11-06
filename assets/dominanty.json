@@ -758,6 +758,270 @@
   }
  },
  {
+  "name": "Dům čp. 153 (drogerie Teta, vchod do Potravin Švamberk)",
+  "lat": 50.3684177,
+  "lon": 15.6318085,
+  "text": "Podle fotek výloh od majitele obchodu (nezveřejněné) a dat (půdorys, výška, ortofoto ČÚZK): šedobéžový dům s lodžiemi nad obchody; v severní části vchod do potravin s oranžovými rámy a začátek štítu ESO market „POTRAVINY ŠVAMBERK“ (červený pás s bílými písmeny, modrý pruh).",
+  "spec": {
+   "wc": [
+    199,
+    190,
+    176
+   ],
+   "rc": [
+    109,
+    114,
+    115
+   ],
+   "r": "flat",
+   "win": 0,
+   "fh": 2.95,
+   "shop": 1,
+   "face": [
+    50.3685,
+    15.6325
+   ],
+   "balconies": [
+    {
+     "side": -10.92,
+     "w": 9.45,
+     "z": 4.25,
+     "d": 0.45,
+     "rail": "solid",
+     "col": [
+      199,
+      190,
+      176
+     ]
+    },
+    {
+     "side": -10.92,
+     "w": 9.45,
+     "z": 7.1,
+     "d": 0.45,
+     "rail": "solid",
+     "col": [
+      199,
+      190,
+      176
+     ]
+    }
+   ],
+   "signs": [
+    {
+     "side": -10.92,
+     "w": 9.45,
+     "z": 2.85,
+     "h": 1.15,
+     "d": 0.3,
+     "col": [
+      210,
+      40,
+      45
+     ],
+     "col2": [
+      35,
+      65,
+      150
+     ],
+     "text": "@@POTRAVINY @@ŠVAM",
+     "panels": [
+      [
+       [
+        215,
+        205,
+        190
+       ],
+       1.4
+      ],
+      [
+       [
+        60,
+        66,
+        72
+       ],
+       1.2
+      ],
+      [
+       [
+        60,
+        66,
+        72
+       ],
+       1.6
+      ],
+      [
+       [
+        60,
+        55,
+        52
+       ],
+       1.4
+      ],
+      [
+       [
+        200,
+        170,
+        120
+       ],
+       1.0
+      ],
+      [
+       [
+        120,
+        130,
+        95
+       ],
+       1.45
+      ],
+      [
+       [
+        150,
+        115,
+        75
+       ],
+       1.4
+      ]
+     ],
+     "frame": [
+      240,
+      115,
+      35
+     ],
+     "pz": 2.3
+    }
+   ]
+  }
+ },
+ {
+  "name": "Potraviny a pekárna Švamberk (čp. 154)",
+  "lat": 50.3685939,
+  "lon": 15.6319643,
+  "text": "Podle fotek výloh od majitele obchodu (nezveřejněné) a dat (půdorys, výška, ortofoto ČÚZK): výlohy s oranžovými rámy a polepy (zelenina, mléčné výrobky, pečivo, černý panel „MY PEČEME!“, chléb), nad nimi štít ESO market „ŠVAMBERK – PEKÁRNA – ŠVAMBERK“ a lodžie s květinami.",
+  "spec": {
+   "wc": [
+    199,
+    190,
+    176
+   ],
+   "rc": [
+    113,
+    117,
+    119
+   ],
+   "r": "flat",
+   "win": 0,
+   "fh": 2.95,
+   "shop": 1,
+   "face": [
+    50.3685,
+    15.6325
+   ],
+   "balconies": [
+    {
+     "side": 1.18,
+     "w": 12.55,
+     "z": 4.25,
+     "d": 0.45,
+     "rail": "solid",
+     "col": [
+      199,
+      190,
+      176
+     ]
+    },
+    {
+     "side": 1.18,
+     "w": 12.55,
+     "z": 7.1,
+     "d": 0.45,
+     "rail": "solid",
+     "col": [
+      199,
+      190,
+      176
+     ]
+    }
+   ],
+   "signs": [
+    {
+     "side": 1.18,
+     "w": 12.55,
+     "z": 2.85,
+     "h": 1.15,
+     "d": 0.3,
+     "col": [
+      210,
+      40,
+      45
+     ],
+     "col2": [
+      35,
+      65,
+      150
+     ],
+     "text": "BERK @@PEKÁRNA @@ŠVAMBERK",
+     "panels": [
+      [
+       [
+        215,
+        208,
+        192
+       ],
+       1.6
+      ],
+      [
+       [
+        165,
+        105,
+        55
+       ],
+       1.7
+      ],
+      [
+       [
+        180,
+        125,
+        70
+       ],
+       1.7
+      ],
+      [
+       [
+        42,
+        38,
+        36
+       ],
+       2.4
+      ],
+      [
+       [
+        175,
+        120,
+        70
+       ],
+       3.0
+      ],
+      [
+       [
+        170,
+        120,
+        75
+       ],
+       2.15
+      ]
+     ],
+     "frame": [
+      240,
+      115,
+      35
+     ],
+     "pz": 2.3
+    }
+   ]
+  }
+ },
+ {
   "name": "Komín v areálu u Maixnerovy ulice",
   "lat": 50.37077,
   "lon": 15.63809,
