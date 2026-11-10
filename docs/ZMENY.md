@@ -89,6 +89,9 @@ Obecně užitečné opravy (bezpečnost, Windows, dálnice) stojí za to nabídn
 
 ## Prohlížeč (`overlay.py`)
 
+- **Příběhy míst** (`mista.json`, 49 míst ve městě, na Chlumu a v okolních obcích): výzkum a nezávislé ověření agenty
+  (2026-11-10), zdroje v [mista-zdroje.md](mista-zdroje.md).
+
 - **Denní doba a roční období podle počítače** (výchozí, volba „Podle skutečného času a data“): noc, soumrak a den
   podle výšky slunce nad městem (souřadnice z mapy, dřív napevno Liberec), období podle data (jaro 3–5, léto 6–8,
   podzim 9–11, zima 12–2, v zimě sníh). Ruční volba období, posuvník nebo odkaz s obdobím či nocí ji přebijí.
