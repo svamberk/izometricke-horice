@@ -89,6 +89,12 @@ Obecně užitečné opravy (bezpečnost, Windows, dálnice) stojí za to nabídn
 
 ## Prohlížeč (`overlay.py`)
 
+- **Denní doba a roční období podle počítače** (výchozí, volba „Podle skutečného času a data“): noc, soumrak a den
+  podle výšky slunce nad městem (souřadnice z mapy, dřív napevno Liberec), období podle data (jaro 3–5, léto 6–8,
+  podzim 9–11, zima 12–2, v zimě sníh). Ruční volba období, posuvník nebo odkaz s obdobím či nocí ji přebijí.
+- **Rychlost aut podle zástavby**: v obci nejvýš 50 km/h, mimo obec 90, dálnice 130, obytná zóna 20 (obec = aspoň
+  4 budovy do 50 m od silnice, po 20m úsecích); auta plynule zrychlují a brzdí. Motorky na okruhu jezdí po svém.
+
 - **Závodní motorky**: `assets/okruh.json` (trasa okruhu z OSM, `nastroje/okruh.py`) -> `overlay.json` `moto`. V prohlížeči
   jezdí 8 motorek dokola ve směru závodu, rychlost podle poloměru zatáček (brzdění a zrychlení), každá jinou stopou.
   Patří k vrstvě Doprava, v zimě nejezdí. Hořice: 300 zatáček Gustava Havla, po směru hodinových ručiček.

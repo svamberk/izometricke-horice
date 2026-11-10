@@ -257,7 +257,7 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
     <label class="label" for="night">Denní doba</label>
     <input id="night" type="range" min="0" max="100" value="0">
     <div class="ends"><span>Den</span><span>Zlatá hodinka</span><span>Noc</span></div>
-    <label class="realtime"><input type="checkbox" id="realTime"> Podle skutečného času</label>
+    <label class="realtime"><input type="checkbox" id="realTime"> Podle skutečného času a data</label>
   </div>
 
   <div>
@@ -366,7 +366,9 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
   const W = OV.w, Hh = OV.h;
   const $ = (id) => document.getElementById(id);
   const isMobile = () => matchMedia('(max-width: 640px)').matches;
-  const state = { season: 'summer', night: 0, weather: 'clear', sel: null, hover: null, wip: false };
+  // roční období podle data v počítači (meteorologicky: jaro 3–5, léto 6–8, podzim 9–11, zima 12–2); odkaz s obdobím má přednost
+  const seasonOf = (d) => { const m = d.getMonth() + 1; return m >= 3 && m <= 5 ? 'spring' : m >= 6 && m <= 8 ? 'summer' : m >= 9 && m <= 11 ? 'autumn' : 'winter'; };
+  const state = { season: seasonOf(new Date()), night: 0, weather: 'clear', sel: null, hover: null, wip: false };
   const SEASON_TOKEN = { jaro: 'spring', leto: 'summer', podzim: 'autumn', zima: 'winter' };
   for (const t of hashTokens) { if (SEASON_TOKEN[t]) state.season = SEASON_TOKEN[t]; if (t === 'noc') state.night = 1; if (t === 'soumrak') state.night = 0.42; if (t === 'vse') state.wip = true; }
   if (state.season === 'winter') state.weather = 'snow';
@@ -533,16 +535,17 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
     sb.disabled = !snowAllowed(); sb.title = snowAllowed() ? '' : 'Sníh jen na podzim a v zimě';
     document.querySelectorAll('[data-w]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.w === w)));
   }
-  document.querySelectorAll('[data-s]').forEach((b) => b.addEventListener('click', () => setSeason(b.dataset.s)));
+  let seasonManual = hashTokens.some((t) => SEASON_TOKEN[t]);       // období zvolené ručně nebo v odkazu: datum ho nemění
+  document.querySelectorAll('[data-s]').forEach((b) => b.addEventListener('click', () => { seasonManual = true; setSeason(b.dataset.s); }));
   document.querySelectorAll('[data-w]').forEach((b) => b.addEventListener('click', () => setWeather(b.dataset.w)));
   document.querySelectorAll('[data-wip]').forEach((b) => b.addEventListener('click', () => { state.wip = b.dataset.wip === '1'; applyVisibility(); viewer.viewport.fitBounds(homeBounds()); }));
   document.querySelectorAll('[data-wip]').forEach((b) => b.setAttribute('aria-pressed', String((b.dataset.wip === '1') === state.wip)));
   setSeason(state.season); setWeather(state.weather);
   $('night').value = Math.round(state.night * 100);
-  $('night').addEventListener('input', (e) => { state.night = e.target.value / 100; $('realTime').checked = false; saveRT(false); applyTime(); });
+  $('night').addEventListener('input', (e) => { state.night = e.target.value / 100; $('realTime').checked = false; applyTime(); });
   // denní doba podle skutečné výšky slunce nad městem (zapíná se volitelně, pamatuje si to prohlížeč)
   function sunAlt(d) {
-    const rad = Math.PI / 180, lat = 50.77, lon = 15.06;
+    const rad = Math.PI / 180, lat = OV.cam.lat0, lon = OV.cam.lon0;     // slunce nad tímto městem
     const day = (Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()) - Date.UTC(d.getUTCFullYear(), 0, 0)) / 864e5;
     const dec = -23.44 * Math.cos(2 * Math.PI / 365 * (day + 10)) * rad;
     const hour = d.getUTCHours() + d.getUTCMinutes() / 60 + lon / 15 - 12;          // sluneční čas
@@ -550,16 +553,18 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
     return Math.asin(Math.sin(lat * rad) * Math.sin(dec) + Math.cos(lat * rad) * Math.cos(dec) * Math.cos(ha)) / rad;
   }
   const nightFromSun = (a) => (a > 8 ? 0 : a > 0 ? 0.42 * (1 - a / 8) + 0.0 : a > -7 ? 0.42 + 0.58 * (-a / 7) : 1);
-  const saveRT = (v) => { try { localStorage.setItem('izo-realtime', v ? '1' : '0'); } catch {} };
   function tickReal() {
     if (!$('realTime').checked) return;
-    state.night = Math.round(nightFromSun(sunAlt(new Date())) * 100) / 100; $('night').value = Math.round(state.night * 100); applyTime();
+    const now = new Date();
+    if (!seasonManual && seasonOf(now) !== state.season) setSeason(seasonOf(now));
+    state.night = Math.round(nightFromSun(sunAlt(now)) * 100) / 100; $('night').value = Math.round(state.night * 100); applyTime();
   }
-  $('realTime').addEventListener('change', (e) => { saveRT(e.target.checked); tickReal(); });
+  $('realTime').addEventListener('change', (e) => { if (e.target.checked) seasonManual = false; tickReal(); });
   // výchozí stav: léto, den, skutečný čas vypnutý (zapne si ho každý sám, volba se pak pamatuje)
-  try { if (localStorage.getItem('izo-realtime') === '1' && !hashTokens.includes('noc')) { $('realTime').checked = true; } } catch {}
+  // výchozí stav: denní doba podle hodin v počítači (výška slunce nad městem), období podle data; odkaz s nocí nebo soumrakem ji přebije
+  $('realTime').checked = !hashTokens.includes('noc') && !hashTokens.includes('soumrak');
   setInterval(tickReal, 60000);
-  $('mTime').addEventListener('click', () => { state.night = state.night < 0.25 ? 0.42 : state.night < 0.7 ? 1 : 0; $('night').value = Math.round(state.night * 100); applyTime(); });
+  $('mTime').addEventListener('click', () => { state.night = state.night < 0.25 ? 0.42 : state.night < 0.7 ? 1 : 0; $('realTime').checked = false; $('night').value = Math.round(state.night * 100); applyTime(); });
 
   // ---------- souřadnice ----------
   const cam = OV.cam;
@@ -909,7 +914,7 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
     const main = []; for (let i = i0; i < roads.length; i++) if (roads[i].c !== 'service') main.push(i);
     const n0 = cars.length, n = Math.min(110, Math.round(main.length / 6));
     for (let j = 0; j < n && main.length; j++) {
-      const i = n0 + j, c = { r: main[Math.floor(rnd(i) * main.length)], dir: rnd(i + 9) > 0.5 ? 1 : -1, s: rnd(i + 3) * 50, v: 7 + rnd(i + 5) * 6, col: CARC[i % CARC.length] };
+      const i = n0 + j, c = { r: main[Math.floor(rnd(i) * main.length)], dir: rnd(i + 9) > 0.5 ? 1 : -1, s: rnd(i + 3) * 50, v: 10, f: 0.85 + rnd(i + 5) * 0.15, col: CARC[i % CARC.length] };
       if (c.dir < 0) c.s = roads[c.r].L - c.s;
       cars.push(c);
     }
@@ -920,7 +925,36 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
     const a = r.w[i - 1], b = r.w[i], pa = r.p[i - 1], pb = r.p[i];
     return { x: a[0] + (b[0] - a[0]) * t, y: a[1] + (b[1] - a[1]) * t, ix: pa[0] + (pb[0] - pa[0]) * t, iy: pa[1] + (pb[1] - pa[1]) * t, d: pa[2] + (pb[2] - pa[2]) * t, dx: b[0] - a[0], dy: b[1] - a[1] };
   }
+  // rychlost aut: v obci nejvýš 50 km/h, mimo obec 90, dálnice 130, obytná zóna 20 (motorky na okruhu jezdí po svém).
+  // Obec = aspoň 4 budovy do 50 m od silnice (po 20m úsecích); obytné ulice vždy 50. Po načtení dalšího čtverce se přepočítá.
+  const BW = new Map(), BWC = 50; let bwVer = 0;
+  onChunk.push((k, d) => {
+    for (const b of d.buildings) {
+      if (b.lon == null) continue;
+      const x = (b.lon - cam.lon0) * cam.kx, y = (b.lat - cam.lat0) * cam.ky, q = Math.floor(x / BWC) + ',' + Math.floor(y / BWC);
+      if (!BW.has(q)) BW.set(q, []); BW.get(q).push([x, y]);
+    }
+    bwVer++;
+  });
+  const nearB = (x, y) => {
+    let n = 0; const cx = Math.floor(x / BWC), cy = Math.floor(y / BWC);
+    for (let i = cx - 1; i <= cx + 1; i++) for (let j = cy - 1; j <= cy + 1; j++) for (const [bx, by] of BW.get(i + ',' + j) || []) if ((bx - x) ** 2 + (by - y) ** 2 < 2500) n++;
+    return n;
+  };
+  const LIMC = { motorway: 130, motorway_link: 80, living_street: 20, service: 30, residential: 50 };
+  function limits(r) {                                     // nejvyšší rychlost v m/s po 20m úsecích silnice
+    if (r.limV === bwVer) return r.lims;
+    const n = Math.max(1, Math.ceil(r.L / 20)), fix = LIMC[r.c], out = [];
+    for (let k = 0; k < n; k++) {
+      if (fix) { out.push(fix / 3.6); continue; }
+      const o = along(r, Math.min(r.L, (k + 0.5) * 20));
+      out.push((nearB(o.x, o.y) >= 4 ? 50 : 90) / 3.6);
+    }
+    r.lims = out; r.limV = bwVer; return out;
+  }
   function stepCar(c, dt) {
+    const lm = limits(roads[c.r]), vt = lm[Math.min(lm.length - 1, Math.max(0, Math.floor(c.s / 20)))] * (c.f || 0.92);
+    c.v = c.v < vt ? Math.min(vt, c.v + 2.5 * dt) : Math.max(vt, c.v - 3.5 * dt);   // plynule zrychlí a přibrzdí
     c.s += c.v * dt * c.dir;
     const r = roads[c.r];
     if (c.s < 0 || c.s > r.L) {
@@ -1047,7 +1081,7 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
       }
     }
   });
-  if (location.hostname === 'localhost') window.__izo = { trams, skiers, MHD, mhdActive, mhdPos, motos, along, toImg, viewer, W };       // ladění v lokálním náhledu
+  if (location.hostname === 'localhost') window.__izo = { trams, skiers, MHD, mhdActive, mhdPos, motos, along, toImg, viewer, W, cars, roads, limits };       // ladění v lokálním náhledu
   function drawSkier(q, sx, ox, oy) {
     const L = q.r.len; let i = 1; while (i < L.length - 1 && L[i] < q.s) i++;
     const a = q.r.w[i - 1], b = q.r.w[i], t = Math.max(0, Math.min(1, (q.s - L[i - 1]) / ((L[i] - L[i - 1]) || 1)));
