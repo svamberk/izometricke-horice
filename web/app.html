@@ -476,6 +476,16 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
   };
   // odkaz na sousední mapu: cílové místo, šířka výřezu a ,1 (kroužek na místě); období a noc jen když nejedou podle skutečného času
   const S_REV = { spring: 'jaro', summer: 'leto', autumn: 'podzim', winter: 'zima' };
+  const timeName = (t) => (t < 0.25 ? 'den' : t < 0.7 ? 'soumrak' : 'noc');   // stejné hranice jako popisek tlačítka mTime
+  // stav do odkazu (#zima-noc-sv@…): se skutečným časem bez denní doby a bez období, které nikdo nezvolil,
+  // ať je příjemce (i po otočení mapy) má podle svých hodin; ručně zvolený den nese značku „den“
+  const stateTokens = (view) => {
+    const rt = $('realTime').checked, tok = [];
+    if (!rt || seasonManual) tok.push(S_REV[state.season]);
+    if (!rt) tok.push(timeName(state.night));
+    if (view) tok.push(VIEWS[view]);
+    return tok.join('-');
+  };
   const neighborHref = (n) => {
     const u = n.url || '';
     if (u.includes('@')) return u;
@@ -483,10 +493,7 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
     if (!Number.isFinite(lat) || !Number.isFinite(lon)) return u;
     let km = 1.4;
     try { const w = viewer.viewport.getBounds(true).width * W * OV.cam.mpp / 1000; if (w > 0 && Number.isFinite(w)) km = Math.min(Math.max(Number(w.toFixed(2)), 0.05), 10); } catch {}
-    const rt = $('realTime').checked, tok = [];
-    if (!rt || seasonManual) tok.push(S_REV[state.season] || 'leto');
-    if (!rt) { if (state.night > 0.65) tok.push('noc'); else if (state.night > 0.25) tok.push('soumrak'); }
-    return u.split('#')[0] + `#${tok.join('-')}@${Number(lat).toFixed(5)},${Number(lon).toFixed(5)},${km},1`;
+    return u.split('#')[0] + `#${stateTokens()}@${Number(lat).toFixed(5)},${Number(lon).toFixed(5)},${km},1`;
   };
   async function initLayers() {
     await addPreview(state.season);
@@ -533,14 +540,17 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
         onChunk.push(() => { const bb = hit(ix, iy); if (bb) state.sel = bb; });   // budovu na místě zvýraznit, jakmile se načtou data
       }
     }
-    let hashT = null;
-    viewer.addHandler('animation-finish', () => { clearTimeout(hashT); hashT = setTimeout(() => {
+    viewer.addHandler('animation-finish', saveHash);
+    loadVisible();
+  }
+  // adresa stránky drží výřez a aktuální stav (ne značky z odkazu, kterým se přišlo), ať obnovení stránky nic nevrátí
+  function saveHash() {
+    if (!ready) return;
+    clearTimeout(saveHash.t); saveHash.t = setTimeout(() => {
       const c = viewer.viewport.getCenter(true), [x, y] = imgToWorld(c.x * W, c.y * W), [lon, lat] = lonlat(x, y);
       const km = viewer.viewport.getBounds(true).width * W * cam.mpp / 1000;
-      const base = location.hash.slice(1).split('@')[0];
-      history.replaceState(null, '', `#${base}@${lat.toFixed(5)},${lon.toFixed(5)},${km.toFixed(2)}`);
-    }, 400); });
-    loadVisible();
+      history.replaceState(null, '', `#${stateTokens(VIEW)}@${lat.toFixed(5)},${lon.toFixed(5)},${km.toFixed(2)}`);
+    }, 400);
   }
   function homeBounds() {
     const vis = LAYERS.filter((l) => shown(l.key));
@@ -610,14 +620,14 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
     document.querySelectorAll('[data-w]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.w === w)));
   }
   let seasonManual = hashTokens.some((t) => SEASON_TOKEN[t]);       // období zvolené ručně nebo v odkazu: datum ho nemění
-  document.querySelectorAll('[data-s]').forEach((b) => b.addEventListener('click', () => { seasonManual = true; setSeason(b.dataset.s); }));
+  document.querySelectorAll('[data-s]').forEach((b) => b.addEventListener('click', () => { seasonManual = true; setSeason(b.dataset.s); saveHash(); }));
   document.querySelectorAll('[data-w]').forEach((b) => b.addEventListener('click', () => setWeather(b.dataset.w)));
   document.querySelectorAll('[data-wip]').forEach((b) => b.addEventListener('click', () => { state.wip = b.dataset.wip === '1'; applyVisibility(); viewer.viewport.fitBounds(homeBounds()); }));
   document.querySelectorAll('[data-wip]').forEach((b) => b.setAttribute('aria-pressed', String((b.dataset.wip === '1') === state.wip)));
   setSeason(state.season); setWeather(state.weather);
   $('night').value = Math.round(state.night * 100);
-  $('night').addEventListener('input', (e) => { state.night = e.target.value / 100; $('realTime').checked = false; applyTime(); });
-  // denní doba podle skutečné výšky slunce nad městem (zapíná se volitelně, pamatuje si to prohlížeč)
+  $('night').addEventListener('input', (e) => { state.night = e.target.value / 100; $('realTime').checked = false; applyTime(); saveHash(); });
+  // denní doba podle skutečné výšky slunce nad městem (výchozí; vypne ho ruční volba denní doby nebo odkaz s ní)
   function sunAlt(d) {
     const rad = Math.PI / 180, lat = OV.cam.lat0, lon = OV.cam.lon0;     // slunce nad tímto městem
     const day = (Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()) - Date.UTC(d.getUTCFullYear(), 0, 0)) / 864e5;
@@ -633,12 +643,12 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
     if (!seasonManual && seasonOf(now) !== state.season) setSeason(seasonOf(now));
     state.night = Math.round(nightFromSun(sunAlt(now)) * 100) / 100; $('night').value = Math.round(state.night * 100); applyTime();
   }
-  $('realTime').addEventListener('change', (e) => { if (e.target.checked) seasonManual = false; tickReal(); });
-  // výchozí stav: léto, den, skutečný čas vypnutý (zapne si ho každý sám, volba se pak pamatuje)
-  // výchozí stav: denní doba podle hodin v počítači (výška slunce nad městem), období podle data; odkaz s nocí nebo soumrakem ji přebije
-  $('realTime').checked = !hashTokens.includes('noc') && !hashTokens.includes('soumrak');
+  $('realTime').addEventListener('change', (e) => { if (e.target.checked) seasonManual = false; tickReal(); saveHash(); });
+  // výchozí stav: denní doba podle hodin v počítači (výška slunce nad městem), období podle data; odkaz s denní dobou
+  // (den, soumrak, noc) ji přebije
+  $('realTime').checked = !['den', 'soumrak', 'noc'].some((t) => hashTokens.includes(t));
   setInterval(tickReal, 60000);
-  $('mTime').addEventListener('click', () => { state.night = state.night < 0.25 ? 0.42 : state.night < 0.7 ? 1 : 0; $('realTime').checked = false; $('night').value = Math.round(state.night * 100); applyTime(); });
+  $('mTime').addEventListener('click', () => { state.night = state.night < 0.25 ? 0.42 : state.night < 0.7 ? 1 : 0; $('realTime').checked = false; $('night').value = Math.round(state.night * 100); applyTime(); saveHash(); });
 
   // ---------- souřadnice ----------
   const cam = OV.cam;
@@ -914,13 +924,7 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
     $('plochaDlg').addEventListener('click', (e) => { if (e.target === $('plochaDlg')) $('plochaDlg').close(); });
   }
   addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('card').hidden && !document.querySelector('dialog[open]') && !e.target.matches('input, textarea')) closeCard(); });
-  // sdílení: odkaz obsahuje polohu, přiblížení, roční období a denní dobu (#zima-noc@50.77,15.06,0.8)
-  const stateTokens = (view) => {
-    const tok = [{ spring: 'jaro', summer: 'leto', autumn: 'podzim', winter: 'zima' }[state.season]];
-    if (state.night > 0.7) tok.push('noc'); else if (state.night > 0.25) tok.push('soumrak');
-    if (view) tok.push(VIEWS[view]);
-    return tok.join('-');
-  };
+  // sdílení: odkaz obsahuje polohu, přiblížení, pohled a zvolené období a denní dobu (#zima-noc@50.77,15.06,0.8), viz stateTokens
   async function share() {
     const url = `${location.origin}${location.pathname}#${stateTokens(VIEW)}@${(location.hash.split('@')[1] || '')}`;
     const toast = (t) => { $('toast').textContent = t; $('toast').hidden = false; clearTimeout(share.t); share.t = setTimeout(() => { $('toast').hidden = true; }, 2200); };
