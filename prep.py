@@ -1190,7 +1190,7 @@ for _, r in bld.iterrows():
             if dsp.get('shop'): b['shop'] = 1                          # výlohy v přízemí
             if dsp.get('fh'): b['fh'] = float(dsp['fh'])                 # výška patra pro okna
             if dsp.get('canopy'): b['cn'] = dsp['canopy']
-            for blk in dsp.get('blocks', []):
+            for blk in (dsp.get('blocks', []) if pi == tw_piece else []):   # nástavby jen na dílu s bodem dominanty, jako věže
                 o = p.minimum_rotated_rectangle; cs = list(o.exterior.coords)[:3]
                 e1 = np.subtract(cs[1], cs[0]); e2 = np.subtract(cs[2], cs[1])
                 if np.linalg.norm(e1) < np.linalg.norm(e2): e1, e2 = e2, e1
@@ -1404,6 +1404,7 @@ for b in buildings:
     if pg.area < 50 or h01('bin' + wkey(c0.x, c0.y)) > 0.55: continue
     brng = wrng(c0.x, c0.y, 'bin')
     i = res_tree.nearest(c0)
+    if i is None: break                                # čtverec bez obytných ulic (les, pole)
     l, w = res_lines[i]
     if l.distance(c0) > 28: continue
     q = l.interpolate(l.project(c0))

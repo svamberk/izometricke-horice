@@ -108,7 +108,7 @@ for chunk in chunks:
         d = px(cx, cy, b['base'])[2]
         church = b['cls'] == 'kostel'
         name, text = b['name'], None
-        if b['cls'] == 'kaple':
+        if b['cls'] == 'kaple' and not name:                # jen kaple bez názvu v datech
             name = 'Hřbitovní kaple'
         inside = []
         if PL_TREE is not None:

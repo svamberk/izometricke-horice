@@ -19,6 +19,8 @@ Obecně užitečné opravy (bezpečnost, Windows, dálnice) stojí za to nabídn
 
 ## Generování mapy (`prep.py`, `render.html`)
 
+- `prep.py` nepadá na čtverci bez obytných ulic (jen les nebo pole) a nástavby dominanty (`blocks`) kreslí jen
+  na dílu s bodem dominanty, jako věže. Obojí je i v PR u autora (adamklatovsky/izomapa#104).
 - **Dálnice (`motorway`)** se dřív nekreslily vůbec (D35 chyběla, kreslily se jen „visící“ zábradlí jejích mostů).
   Teď: šířka podle počtu pásů, sjezdy jednopruhové, čára mezi pruhy, auta, bez lamp a chodníků. Úseky
   `is_under_construction` se nekreslí.
@@ -89,6 +91,7 @@ Obecně užitečné opravy (bezpečnost, Windows, dálnice) stojí za to nabídn
 
 ## Prohlížeč (`overlay.py`)
 
+- Kaple s názvem v datech si ho nechá (Hlohová kaplička), „Hřbitovní kaple“ je jen náhradní název kaple bez názvu.
 - **Převzato z upstreamu (12. 11. 2026, jen prohlížeč, bez přerenderování):** mapa jako aplikace (manifest, ikony,
   „Přidat na plochu“, celý `build_html.py` z upstreamu; vyrobí i náhled og.jpg), sousední mapy (`mesto.json` `sousedi`,
   Hořice ↔ Lázně Bělohrad a Hradec Králové; odkaz nenese období ani noc, když jede skutečný čas), drobnosti pro mobil
