@@ -20,7 +20,12 @@
   --body: "Atkinson Hyperlegible", system-ui, sans-serif;
   color-scheme: dark;
 }
-html, body { height: 100%; }
+html, body { height: 100%; overscroll-behavior: none; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+#map { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; -webkit-tap-highlight-color: transparent; }
+button, a, label, summary, input, select { touch-action: manipulation; }
+/* iOS po klepnutí do pole s písmem pod 16 px přiblíží stránku a nevrátí ji */
+.search input, .card .report textarea, .card .report select { font-size: max(16px, 1em) !important; }
 body { background: var(--night); color: var(--ink); font-family: var(--body); overflow: hidden; }
 #map { position: fixed; inset: 0; background: var(--night); }
 #osd { width: 100%; height: 100%; }
@@ -35,7 +40,7 @@ body { background: var(--night); color: var(--ink); font-family: var(--body); ov
   max-height: calc(100% - 32px - 190px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
   overflow: auto;
   background: var(--panel); border: 2px solid var(--edge); box-shadow: 4px 4px 0 rgba(0, 0, 0, .35);
-  display: grid; gap: 12px; padding: 14px 16px;
+  display: grid; gap: 12px; padding: 14px 16px; box-sizing: border-box;
 }
 .panel { transition: transform .2s ease; }
 .fold {
@@ -129,12 +134,14 @@ dialog.help ul { margin: 0; padding-left: 18px; } dialog.help li { margin: 3px 0
 dialog.help p { margin: 4px 0; } dialog.help a { color: var(--ink); }
 dialog.help .close { position: absolute; top: 8px; right: 8px; width: 32px; height: 32px; padding: 0; }
 dialog.help .muted { color: var(--muted); margin-top: 14px; }
+dialog.plocha { max-width: 440px; } dialog.plocha h3 { margin-top: 0; } dialog.plocha ol { margin: 4px 0 8px; padding-left: 20px; } dialog.plocha li { margin: 3px 0; }
+.app-btn[hidden], .pl-os[hidden] { display: none; }
 .support-links { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 6px; }
 .support-links a.px-btn { text-decoration: none; display: inline-block; }
 .coffee { display: block; font-size: .82rem; color: var(--muted); text-decoration: none; padding: 2px 0; }
 .coffee:hover, .coffee:focus-visible { color: var(--ink); text-decoration: underline; }
 .support-links img { width: 132px; height: 132px; image-rendering: pixelated; background: #fff; padding: 4px; }
-.follow { position: fixed; left: 50%; bottom: 76px; transform: translateX(-50%); z-index: 6; display: flex; align-items: center; gap: 10px; padding: 6px 6px 6px 12px;
+.follow { position: fixed; left: 50%; width: max-content; max-width: calc(100vw - 32px); bottom: calc(env(safe-area-inset-bottom, 0px) + 76px); transform: translateX(-50%); z-index: 6; display: flex; align-items: center; gap: 10px; padding: 6px 6px 6px 12px;
   background: var(--panel); border: 2px solid var(--edge); box-shadow: 4px 4px 0 rgba(0, 0, 0, .35); font-size: .9rem; max-width: calc(100vw - 32px); }
 .follow b { font-family: var(--display); font-weight: 500; }
 .follow .px-btn { width: 32px; height: 32px; padding: 0; flex: none; }
@@ -145,7 +152,7 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
 #vdFoundMsg.ok { color: var(--grass); } #vdFoundMsg.err { color: #ff9a6a; }
 .here-pin { width: 26px; height: 26px; border: 3px solid #ff9a3c; border-radius: 50%; box-shadow: 0 0 0 3px rgba(20, 26, 40, .7); animation: herepulse 1.2s ease-in-out infinite; pointer-events: none; }
 @keyframes herepulse { 50% { transform: scale(1.5); opacity: .55; } }
-.toast { position: fixed; z-index: 6; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 84px); transform: translateX(-50%);
+.toast { position: fixed; z-index: 6; left: 50%; width: max-content; max-width: calc(100vw - 32px); overflow-wrap: anywhere; bottom: calc(env(safe-area-inset-bottom, 0px) + 84px); transform: translateX(-50%);
   background: var(--panel); border: 2px solid var(--edge); padding: 8px 14px; font-size: .86rem; box-shadow: 4px 4px 0 rgba(0, 0, 0, .35); }
 .realtime { display: flex; gap: 8px; align-items: center; font-size: .82rem; color: var(--muted); margin-top: 6px; cursor: pointer; }
 .realtime input { accent-color: var(--grass); }
@@ -179,7 +186,29 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
 .pin::after { content: ""; position: absolute; left: 50%; top: 100%; width: 2px; height: 10px; background: var(--tile); transform: translateX(-50%); }
 .pin.need { background: var(--lamp); color: var(--night); border-color: var(--night); transform: translate(-50%, -260%); }
 .pin.need::after { background: var(--night); }
-.nolabels .pin, .far .pin:not(.need) { display: none !important; }
+.pin.neighbor {
+  pointer-events: auto; cursor: pointer; text-decoration: none;
+  background: var(--panel); border: 2px solid var(--lamp); color: var(--ink); font-weight: bold;
+  display: inline-flex; align-items: center; gap: 4px; transform: translate(-50%, -140%);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, .4); transition: transform .12s ease, background .12s ease, border-color .12s ease;
+  z-index: 2;
+}
+.pin.neighbor::after { content: ""; position: absolute; left: 50%; top: 100%; width: 2px; height: 10px; background: var(--lamp); transform: translateX(-50%); }
+.pin.neighbor:hover, .pin.neighbor:focus-visible {
+  background: var(--panel-2); border-color: var(--grass); transform: translate(-50%, -146%) scale(1.05);
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, .5); outline: none;
+}
+.pin.neighbor:hover::after, .pin.neighbor:focus-visible::after { background: var(--grass); }
+.pin.neighbor .pin-ico { font-size: .85em; color: var(--lamp); }
+.pin.neighbor:hover .pin-ico { color: var(--grass); }
+.card-neighbor-btn {
+  display: block; text-align: center; font-family: var(--display); font-size: .95rem; font-weight: bold;
+  text-decoration: none; background: var(--lamp); color: var(--night); border: 2px solid var(--night);
+  padding: 6px 10px; margin-bottom: 8px; box-shadow: 2px 2px 0 rgba(0, 0, 0, .3);
+  transition: transform .1s ease, background .1s ease;
+}
+.card-neighbor-btn:hover, .card-neighbor-btn:focus-visible { background: #ffe08a; transform: translateY(-1px); }
+.nolabels .pin, .far .pin:not(.need):not(.neighbor) { display: none !important; }
 .loading { position: fixed; inset: 0; display: grid; place-items: center; font-family: var(--display); color: var(--muted); z-index: 1; pointer-events: none; }
 .mbar { display: none; }
 
@@ -192,6 +221,9 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
   .panel.closed .sub { display: none; }
   h1 { font-size: 1.2rem; }
   .controls, .minimap, .fold { display: none; }
+  details summary, .realtime, .layers label { min-height: 44px; display: flex; align-items: center; }
+  .results button, .places button { min-height: 44px; }
+  dialog.help .close { width: 44px; height: 44px; }
   .rot { bottom: calc(env(safe-area-inset-bottom, 0px) + 76px); right: max(10px, env(safe-area-inset-right, 0px)); }
   .folded .panel { transform: none; }
   .mbar {
@@ -211,6 +243,10 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
   .card .close { top: 10px; right: max(10px, env(safe-area-inset-right, 0px)); width: 44px; height: 44px; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+@media (max-height: 500px) {                /* telefon na šířku: minimapa by zabrala polovinu výšky a panel by neměl místo */
+  .minimap { display: none; }
+  .panel { max-height: calc(100% - 32px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); }
+}
 </style>
 
 <div id="map" aria-label="Izometrická pixel-art mapa {{MESTO}}"><div id="osd"></div><canvas id="fx"></canvas></div>
@@ -329,6 +365,7 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
 <dialog class="help" id="helpDlg" aria-labelledby="helpTitle">
   <button class="px-btn close" id="helpClose" type="button" aria-label="Zavřít">×</button>
   <h2 id="helpTitle">O mapě</h2>
+  <p><button class="px-btn app-btn" id="plochaBtn" type="button">📱 Přidat na plochu</button></p>
   <p>{{POPIS}}</p>
   <h3>Ovládání</h3>
   <ul>
@@ -336,11 +373,20 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
     <li><b>Budova:</b> klikněte na ni a ukáže se název, adresa a odkaz na Mapy.cz.</li>
     <li><b>Roční období, denní doba a počasí</b> se přepínají v menu. Na mobilu jsou roční období a denní doba i ve spodní liště.</li>
     <li><b>Hledání</b> zná ulice, adresy, budovy i zajímavá místa.</li>
-    <li><b>Otočení mapy</b> ⟲ ⟳ po 90°: pohled od jihozápadu, severozápadu, severovýchodu nebo jihovýchodu. Střelka ukazuje sever, klepnutím na ni se vrátíte na výchozí pohled.</li>
+    <li id="helpRot" hidden><b>Otočení mapy</b> ⟲ ⟳ po 90°: pohled od jihozápadu, severozápadu, severovýchodu nebo jihovýchodu. Střelka ukazuje sever, klepnutím na ni se vrátíte na výchozí pohled.</li>
     <li><b>Sdílet</b> <span class="ico-inline"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11M8 7l4-4 4 4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/><path d="M8 10H5v11h14V10h-3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/></svg></span> zkopíruje odkaz přesně na to, co právě vidíte, včetně ročního období a denní doby.</li>
   </ul>
   <p class="muted">Vytvořeno nástrojem <a href="https://github.com/adamklatovsky/izomapa" target="_blank" rel="noopener">izomapa</a> od <a href="https://www.adamklatovsky.cz/" target="_blank" rel="noopener">Adama Klatovského</a> (původní mapa: <a href="https://izomapa.fun" target="_blank" rel="noopener">izometrický Liberec</a>).<br>
   Mapová data © přispěvatelé <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> (ODbL) a Overture Maps, terén Terrarium (AWS Open Data), výšky budov a stromů, ortofoto a ZABAGED © <a href="https://geoportal.cuzk.cz/" target="_blank" rel="noopener">ČÚZK</a> (CC BY 4.0){{MHD_ZDROJ}}.</p>
+</dialog>
+<dialog class="help plocha" id="plochaDlg" aria-labelledby="plochaTitle">
+  <button class="px-btn close" id="plochaClose" type="button" aria-label="Zavřít">×</button>
+  <h3 id="plochaTitle">Mapa jako aplikace</h3>
+  <p>Ikona na ploše otevře mapu rovnou přes celou obrazovku, bez lišty prohlížeče.</p>
+  <p class="pl-os" id="plInstall" hidden><button class="px-btn" id="plochaGo" type="button">Přidat na plochu</button></p>
+  <div class="pl-os" data-os="ios"><h4>iPhone a iPad (Safari)</h4><ol><li>Dole klepněte na <b>Sdílet</b> (čtvereček se šipkou nahoru).</li><li>Vyberte <b>Přidat na plochu</b>.</li><li>Potvrďte <b>Přidat</b>.</li></ol></div>
+  <div class="pl-os" data-os="android"><h4>Android (Chrome)</h4><ol><li>Vpravo nahoře klepněte na <b>⋮</b>.</li><li>Vyberte <b>Přidat na plochu</b> nebo <b>Instalovat aplikaci</b>.</li><li>Potvrďte <b>Instalovat</b>.</li></ol></div>
+  <div class="pl-os" data-os="pc"><h4>Počítač (Chrome, Edge)</h4><ol><li>V adresním řádku vpravo klikněte na ikonu <b>Instalovat</b> (monitor se šipkou).</li><li>Nebo v menu <b>⋮</b> zvolte <b>Uložit a sdílet → Instalovat stránku jako aplikaci</b>.</li></ol><p>V Safari na Macu: <b>Soubor → Přidat do Docku</b>.</p></div>
 </dialog>
 <nav class="mbar" id="mbar" aria-label="Rychlé ovládání">
   <button class="px-btn" type="button" data-s="spring">Jaro</button>
@@ -351,7 +397,7 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
   <button class="px-btn" type="button" id="mShare" aria-label="Sdílet tento pohled"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11M8 7l4-4 4 4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/><path d="M8 10H5v11h14V10h-3" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/></svg></button>
 </nav>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.0/openseadragon.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/4.1.0/openseadragon.min.js" integrity="sha384-4BsIv4BUV37POdA1NZ6UcVAsFk96MQXmFLog7pWs+JP+a8k2XjilfManEVdWDxTe" crossorigin="anonymous"></script>
 <script>
 (async () => {
 
@@ -428,6 +474,20 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
       if (l.day) viewer.world.setItemIndex(l.day, k++);
     }
   };
+  // odkaz na sousední mapu: cílové místo, šířka výřezu a ,1 (kroužek na místě); období a noc jen když nejedou podle skutečného času
+  const S_REV = { spring: 'jaro', summer: 'leto', autumn: 'podzim', winter: 'zima' };
+  const neighborHref = (n) => {
+    const u = n.url || '';
+    if (u.includes('@')) return u;
+    const lat = n.target_lat ?? n.lat, lon = n.target_lon ?? n.lon;
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) return u;
+    let km = 1.4;
+    try { const w = viewer.viewport.getBounds(true).width * W * OV.cam.mpp / 1000; if (w > 0 && Number.isFinite(w)) km = Math.min(Math.max(Number(w.toFixed(2)), 0.05), 10); } catch {}
+    const rt = $('realTime').checked, tok = [];
+    if (!rt || seasonManual) tok.push(S_REV[state.season] || 'leto');
+    if (!rt) { if (state.night > 0.65) tok.push('noc'); else if (state.night > 0.25) tok.push('soumrak'); }
+    return u.split('#')[0] + `#${tok.join('-')}@${Number(lat).toFixed(5)},${Number(lon).toFixed(5)},${km},1`;
+  };
   async function initLayers() {
     await addPreview(state.season);
     $('loading').hidden = true;
@@ -444,6 +504,19 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
     for (const p of OV.places) {
       const el = document.createElement('div'); el.className = 'pin'; el.textContent = p.name; p.el = el;
       viewer.addOverlay({ element: el, location: new OpenSeadragon.Point(p.xy[0] / W, p.xy[1] / W), placement: OpenSeadragon.Placement.CENTER, checkResize: false });
+    }
+    for (const n of OV.neighbors || []) {                  // sousední mapy: špendlík s odkazem, vidět i při oddálení
+      const el = document.createElement('a'); el.className = 'pin neighbor'; el.href = neighborHref(n);
+      if (n.target) el.target = n.target;
+      if (el.target === '_blank') el.rel = 'noopener';
+      el.title = n.text || `Přejít na mapu: ${n.name}`;
+      el.innerHTML = `<span class="pin-ico">↗</span> ${n.name}`;
+      const upd = () => { el.href = neighborHref(n); };
+      el.addEventListener('pointerenter', upd);
+      el.addEventListener('pointerdown', (e) => { e.stopPropagation(); upd(); });
+      el.addEventListener('click', (e) => { e.stopPropagation(); upd(); });
+      n.el = el;
+      viewer.addOverlay({ element: el, location: new OpenSeadragon.Point(n.xy[0] / W, n.xy[1] / W), placement: OpenSeadragon.Placement.CENTER, checkResize: false });
     }
     ready = true; applyVisibility(); applyTime(); loadMini(); tickReal();
     const b = homeBounds(); viewer.viewport.fitBounds(b, true);
@@ -492,6 +565,7 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
   function applyVisibility() {
     for (const l of LAYERS) if (l.day) l.day.setOpacity(layerOpacity(l));
     for (const p of OV.places) if (p.el) p.el.hidden = !shown(p.k);
+    for (const n of OV.neighbors || []) if (n.el) n.el.hidden = !shown(n.k);
     for (const n of OV.needs || []) if (n.el) n.el.hidden = !state.wip;
     document.querySelectorAll('[data-wip]').forEach((b) => b.setAttribute('aria-pressed', String((b.dataset.wip === '1') === state.wip)));
     if (typeof renderPlaces === 'function') renderPlaces();
@@ -651,13 +725,20 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
 
   // ---------- karta ----------
   const ROOF = { flat: 'plochá', gabled: 'sedlová', hipped: 'valbová', pyramidal: 'stanová' };
-  function showCard({ title, text, rows, lon, lat, k }) {
+  function showCard({ title, text, rows, lon, lat, k, link, linkText, target }) {
     $('cardTitle').textContent = title;
     if (k && !(LAYERS.find((l) => l.key === k) || {}).status?.startsWith('hotovo')) { const t = document.createElement('span'); t.className = 'wip-tag'; t.textContent = 'Rozpracováno'; $('cardTitle').append(' ', t); }
     $('cardText').hidden = !text; $('cardText').textContent = text || '';
     const dl = $('cardDl'); dl.replaceChildren();
     for (const [k, v] of rows) { if (v === undefined || v === null || v === '') continue; const dt = document.createElement('dt'); dt.textContent = k; const dd = document.createElement('dd'); dd.textContent = v; dl.append(dt, dd); }
     const links = $('cardLinks'); links.replaceChildren();
+    if (link) {
+      const btn = document.createElement('a'); btn.href = link; btn.className = 'card-neighbor-btn';
+      if (target) btn.target = target;
+      if (btn.target === '_blank') btn.rel = 'noopener';
+      btn.textContent = linkText || `Přejít na mapu ${title} ↗`;
+      links.append(btn);
+    }
     const a = document.createElement('a'); a.target = '_blank'; a.rel = 'noopener';
     a.href = `https://mapy.cz/zakladni?x=${lon.toFixed(6)}&y=${lat.toFixed(6)}&z=19&source=coor&id=${lon.toFixed(6)}%2C${lat.toFixed(6)}`;
     a.textContent = 'Ukázat ve skutečnosti (Mapy.cz)';
@@ -712,6 +793,10 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
   function showPoint(ix, iy) {
     state.sel = null;
     const [x, y] = imgToWorld(ix, iy); const [lon, lat] = lonlat(x, y);
+    // sousední mapa: klik do 40 m od špendlíku (1 px = 0,2 m)
+    let nb = null, nd = 200;
+    for (const n of OV.neighbors || []) { if (!shown(n.k)) continue; const d = Math.hypot(ix - n.xy[0], iy - n.xy[1]); if (d < nd) { nb = n; nd = d; } }
+    if (nb) { showCard({ title: nb.name, text: nb.text || 'Sousední izometrická mapa.', lon: nb.lon, lat: nb.lat, k: nb.k, link: neighborHref(nb), linkText: `Přejít na mapu ${nb.name} ↗`, target: nb.target, rows: [['Sousední mapa', nb.name]] }); return; }
     // místo bez budovy (náměstí, hřbitov, přehrada): klik do 40 m od jeho špendlíku (1 px = 0,2 m)
     let pl = null, bd = 200;
     for (const p of OV.places) { if (!shown(p.k)) continue; const d = Math.hypot(ix - p.xy[0], iy - p.xy[1]); if (d < bd) { pl = p; bd = d; } }
@@ -767,6 +852,7 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
   renderPlaces();
   const norm = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
   const index = [];
+  for (const n of OV.neighbors || []) index.push({ label: n.name, kind: 'soused', k: n.k, n: norm(n.name), go: () => { goTo(n.xy[0], n.xy[1], 1.4); showCard({ title: n.name, text: n.text || 'Sousední izometrická mapa.', lon: n.lon, lat: n.lat, k: n.k, link: neighborHref(n), linkText: `Přejít na mapu ${n.name} ↗`, target: n.target, rows: [['Sousední mapa', n.name]] }); } });
   for (const p of OV.places) index.push({ label: p.name, kind: 'místo', k: p.k, n: norm(p.name), go: () => { goTo(p.xy[0], p.xy[1], 1.4); showCard({ title: p.name, text: p.text, lon: p.lon, lat: p.lat, k: p.k, rows: [] }); } });
   for (const s of OV.streets) index.push({ label: s.name, kind: 'ulice', k: s.k, n: norm(s.name), go: () => goTo(s.xy[0], s.xy[1], 0.9) });
   // adresy celé mapy jsou ve zvláštním souboru, načtou se při prvním psaní do hledání
@@ -793,7 +879,7 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
     if (!addrLoad) { loadAddr().then(() => e.target.dispatchEvent(new Event('input'))); }
     const pool = index.filter((r) => shown(r.k)), seenL = new Set();
     const starts = pool.filter((r) => r.n.startsWith(q)), inside = pool.filter((r) => !r.n.startsWith(q) && r.n.includes(q));
-    const order = { 'místo': 0, budova: 1, ulice: 2, adresa: 3 };
+    const order = { soused: 0, 'místo': 0, budova: 1, ulice: 2, adresa: 3 };
     res = [...starts, ...inside].filter((r) => !seenL.has(r.kind + r.label) && seenL.add(r.kind + r.label)).sort((a, b) => (a.n.startsWith(q) === b.n.startsWith(q) ? order[a.kind] - order[b.kind] : 0)).slice(0, 8);
     renderResults();
   });
@@ -811,6 +897,23 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
   $('help').addEventListener('click', (e) => { e.stopPropagation(); $('helpDlg').showModal(); });
   $('helpClose').addEventListener('click', () => $('helpDlg').close());
   $('helpDlg').addEventListener('click', (e) => { if (e.target === $('helpDlg')) $('helpDlg').close(); });
+  // přidání na plochu: návod podle zařízení; Chrome na Androidu a počítači nabídne rovnou svoje okno instalace (upstream a4bc46d)
+  {
+    const ua = navigator.userAgent, os = /iPhone|iPad|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1) ? 'ios' : /Android/.test(ua) ? 'android' : 'pc';
+    let prompt = null;
+    if (matchMedia('(display-mode: standalone)').matches || navigator.standalone) $('plochaBtn').hidden = true;   // už běží jako aplikace
+    addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); prompt = e; });
+    addEventListener('appinstalled', () => { prompt = null; $('plochaBtn').hidden = true; $('plochaDlg').close(); });
+    $('plochaBtn').addEventListener('click', () => {
+      $('plInstall').hidden = !prompt;
+      document.querySelectorAll('#plochaDlg [data-os]').forEach((el) => { el.hidden = el.dataset.os !== os; });
+      $('plochaDlg').showModal();
+    });
+    $('plochaGo').addEventListener('click', async () => { if (!prompt) return; prompt.prompt(); await prompt.userChoice.catch(() => {}); prompt = null; $('plInstall').hidden = true; });
+    $('plochaClose').addEventListener('click', () => $('plochaDlg').close());
+    $('plochaDlg').addEventListener('click', (e) => { if (e.target === $('plochaDlg')) $('plochaDlg').close(); });
+  }
+  addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('card').hidden && !document.querySelector('dialog[open]') && !e.target.matches('input, textarea')) closeCard(); });
   // sdílení: odkaz obsahuje polohu, přiblížení, roční období a denní dobu (#zima-noc@50.77,15.06,0.8)
   const stateTokens = (view) => {
     const tok = [{ spring: 'jaro', summer: 'leto', autumn: 'podzim', winter: 'zima' }[state.season]];
@@ -835,7 +938,7 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
     location.reload();
   }
   if ((TILES.pohledy || []).length === 4) {
-    $('rot').hidden = false;
+    $('rot').hidden = false; $('helpRot').hidden = false;
     zbtn('rotR', () => rotate((VIEW + 3) % 4)); zbtn('rotL', () => rotate((VIEW + 1) % 4)); zbtn('north', () => VIEW && rotate(0));
     const a = toImg(0, 0, 0), b = toImg(0, 100, 0);            // kam na obrazovce míří sever
     $('northArrow').style.transform = `rotate(${Math.atan2(b[0] - a[0], a[1] - b[1]) * 180 / Math.PI}deg)`;
@@ -1358,7 +1461,7 @@ dialog.help ol.vd-list { margin: 0; padding-left: 22px; } ol.vd-list li { margin
     perf(now - last);
     if (eco && (skip = !skip)) { requestAnimationFrame(frame); return; }      // úsporně: každý druhý snímek
     const dt = Math.min(0.1, (now - last) / 1000); last = now;
-    const dpr = window.devicePixelRatio || 1;
+    const dpr = SLOW ? Math.min(1.5, window.devicePixelRatio || 1) : (window.devicePixelRatio || 1);   // mobil: efekty v 1,5× místo 3×, 4× méně pixelů (pixel art, plátno se zvětší bez rozmazání)
     const cw = fx.clientWidth, ch = fx.clientHeight;
     if (fx.width !== Math.round(cw * dpr) || fx.height !== Math.round(ch * dpr)) { fx.width = Math.round(cw * dpr); fx.height = Math.round(ch * dpr); }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, cw, ch); ctx.imageSmoothingEnabled = false;

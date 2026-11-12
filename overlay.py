@@ -192,6 +192,24 @@ for name, lat, lon, text in PLACES:
     OFF = (0.0, 0.0)
     places.append({'name': name, 'text': text, 'lon': lon, 'lat': lat, 'k': CKEY[c], 'xy': list(px(float(x), float(y), gz(x, y))[:2])})
 
+# sousední mapy (upstream izomapa): mesto.json nebo assets/upresneni.json "sousedi": [{nazev, url, lat, lon, cil: [lat, lon], text}]
+_UPS = json.load(open('assets/upresneni.json', encoding='utf-8')) if os.path.exists('assets/upresneni.json') else {}
+SOUS_RAW = _UPS.get('sousedi') or MESTO.get('sousedi') or []
+neighbors = []
+for s in SOUS_RAW if isinstance(SOUS_RAW, list) else []:
+    name, url = s.get('nazev') or s.get('name'), s.get('url') or s.get('href')
+    if not name or not url or 'lat' not in s or 'lon' not in s: continue
+    lat, lon = float(s['lat']), float(s['lon'])
+    x, y = to_local(lon, lat); c = chunk_of(float(x), float(y)); k = CKEY.get(c)
+    if not k and chunks: k = CKEY[min(chunks, key=lambda ch: (ch[0] * 2 * HALF - x) ** 2 + (ch[1] * 2 * HALF - y) ** 2)]
+    if not k: continue
+    OFF = (0.0, 0.0)
+    ix, iy, _ = px(float(x), float(y), gz(x, y))
+    item = {'name': name, 'url': url, 'lat': lat, 'lon': lon, 'k': k, 'xy': [ix, iy], 'target': s.get('target', '_self')}
+    if s.get('text'): item['text'] = s['text']
+    if 'cil' in s and len(s['cil']) >= 2: item['target_lat'], item['target_lon'] = float(s['cil'][0]), float(s['cil'][1])
+    neighbors.append(item)
+
 cam = {'x0': info['x0'], 'y1': info['y1'], 'mpp': info['mpp'], 'X': list(map(float, CAM_X)), 'Y': list(map(float, CAM_Y)),
        'half': HALF, 'grounds': grounds, 'sun': list(SUN), 'pohled': POHLED}
 # vánoční strom na náměstí (zima): mesto.json vanocni_strom = [lat, lon]
@@ -268,8 +286,8 @@ if os.path.exists('assets/okruh.json'):
     moto = {'nazev': _ok['nazev'], 'n': _ok.get('motorek', 8), 'w': [[round(x, 1), round(y, 1)] for x, y in _w]}   # body obrazu dopočítá prohlížeč
     print('okruh', _ok['nazev'], len(_w), 'bodů,', moto['n'], 'motorek')
 json.dump({'w': W, 'h': H, 'cam': cam, 'districts': districts, 'needs': needs, 'xmas': nam, 'chunks': {CKEY[c]: CHUNKS[c] for c in chunks}, 'bus': bus_route, 'trams': trams, 'decks': decks, 'moto': moto,
-           'streets': streets, 'places': places},
+           'streets': streets, 'places': places, 'neighbors': neighbors},
           open(f'{SITE}/overlay.json', 'w'), separators=(',', ':'), ensure_ascii=False)
 json.dump(addr_index, open(f'{SITE}/search.json', 'w'), separators=(',', ':'), ensure_ascii=False)   # adresy pro hledání, načte se až při psaní
 print('čtverců', len(chunks), 'budov', sum(len(v['buildings']) for v in per_chunk.values()), 'adres', len(addr_index),
-      'ulic', len(streets), 'míst', len(places), 'kB', os.path.getsize(f'{SITE}/overlay.json') // 1000)
+      'ulic', len(streets), 'míst', len(places), 'sousedů', len(neighbors), 'kB', os.path.getsize(f'{SITE}/overlay.json') // 1000)

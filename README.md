@@ -11,7 +11,7 @@ Mapa vznikla nástrojem **[izomapa](https://github.com/adamklatovsky/izomapa)**,
 [Adam Klatovský](https://www.adamklatovsky.cz/) (živá ukázka jeho Liberce je na [izomapa.fun](https://izomapa.fun)).
 Tenhle repozitář je jeho fork s konfigurací Hořic, ručně doladěnými dominantami a několika úpravami nástroje
 (seznam v [docs/ZMENY.md](docs/ZMENY.md)). Původní README nástroje je v [README-izomapa.md](README-izomapa.md).
-Když vám izomapa ušetřila práci, autor nástroje bude rád za [kafe ☕](https://donate.stripe.com/3cI6oA0PE7u65Y9cim8g000).
+Když vám izomapa ušetřila práci, autor nástroje bude rád za [kafe ☕](https://donate.stripe.com/7sY7sE41Qg0C0DP5TY8g001).
 
 ## Co v mapě je
 

@@ -27,4 +27,4 @@ python mhd.py || true                                         # jízdní řády 
 python set_status.py hotovo
 python build_html.py
 echo "Hotovo. Náhled: npm run nahled  a otevři http://localhost:8000"
-echo "Izomapa je zdarma. Jestli ti ušetřila práci, kup autorovi kafe: https://donate.stripe.com/3cI6oA0PE7u65Y9cim8g000 ☕"
+echo "Izomapa je zdarma. Jestli ti ušetřila práci, kup autorovi kafe: https://donate.stripe.com/7sY7sE41Qg0C0DP5TY8g001 ☕"

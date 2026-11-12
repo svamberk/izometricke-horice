@@ -29,5 +29,9 @@
   "zdroj_url": null
  },
  "vanocni_strom": [50.3688, 15.63269],
- "voda_mokrad": ["dbe07698-9f13-3aa5-ac8a-14b1de68b5e6"]
+ "voda_mokrad": ["dbe07698-9f13-3aa5-ac8a-14b1de68b5e6"],
+ "sousedi": [
+  {"nazev": "Lázně Bělohrad", "url": "https://www.svamberk.net/lb/", "lat": 50.3925, "lon": 15.617, "cil": [50.4075, 15.617], "text": "Sousední izometrická mapa Lázní Bělohradu, necelý kilometr severně (silnice přes Lukavec)."},
+  {"nazev": "Hradec Králové", "url": "https://www.svamberk.net/hk/", "lat": 50.3365, "lon": 15.6875, "cil": [50.261, 15.765], "text": "Sousední izometrická mapa Hradce Králové, asi 7 km jihovýchodně."}
+ ]
 }

@@ -13,7 +13,7 @@ tu nejsou jeho ručně vyladěné stavby, příběhy míst ani hra Najdi Vildu. 
 svoje město. Tenhle repozitář je přesně na to.
 
 Autor: [Adam Klatovský](https://www.adamklatovsky.cz/). Je to zdarma. Když vám to ušetří práci,
-[kupte mi kafe ☕](https://donate.stripe.com/3cI6oA0PE7u65Y9cim8g000). Jak to vzniklo, popisuju v článku
+[kupte mi kafe ☕](https://donate.stripe.com/7sY7sE41Qg0C0DP5TY8g001). Jak to vzniklo, popisuju v článku
 [Jak jsem s AI postavil izometrický Liberec](https://www.adamklatovsky.cz/blog/jak-jsem-s-ai-postavil-izometricky-liberec).
 
 ![Izometrická Chrastava, postavená tímhle repem bez ručních úprav](priklady/chrastava.webp)
@@ -178,7 +178,7 @@ Bez `"hlaseni": true` se tlačítko nezobrazí a web zůstane čistě statický.
 
 Repozitář dávám k dispozici, jak je. Podporu neposkytuju, na issues a pull requesty se podívám, až budu mít čas.
 
-Když vám repo ušetřilo práci, můžete mi [koupit kafe ☕](https://donate.stripe.com/3cI6oA0PE7u65Y9cim8g000).
+Když vám repo ušetřilo práci, můžete mi [koupit kafe ☕](https://donate.stripe.com/7sY7sE41Qg0C0DP5TY8g001).
 Budu rád, když v mapě necháte nenápadný odkaz „Vytvořeno nástrojem izomapa“ (je v O projektu a v nápovědě).
 
 Prosím, nepojmenovávejte svoje projekty „Izomapa“ a nepoužívejte domény izomapa.fun a izomapa.cz. Pojmenujte je po svém městě.

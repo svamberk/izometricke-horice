@@ -89,6 +89,13 @@ Obecně užitečné opravy (bezpečnost, Windows, dálnice) stojí za to nabídn
 
 ## Prohlížeč (`overlay.py`)
 
+- **Převzato z upstreamu (12. 11. 2026, jen prohlížeč, bez přerenderování):** mapa jako aplikace (manifest, ikony,
+  „Přidat na plochu“, celý `build_html.py` z upstreamu; vyrobí i náhled og.jpg), sousední mapy (`mesto.json` `sousedi`,
+  Hořice ↔ Lázně Bělohrad a Hradec Králové; odkaz nenese období ani noc, když jede skutečný čas), drobnosti pro mobil
+  (minimapa na šířku, lehčí vrstva efektů, 44px ovládání, iOS bez přibližování pole hledání, SRI pro OpenSeadragon,
+  Esc zavře kartu). Přesun tlačítek na mobilu z upstreamu vynechán: koliduje s tlačítky otáčení. Nápověda k otáčení se
+  ukáže jen u map s otočenými pohledy.
+
 - **Příběhy míst** (`mista.json`, 49 míst ve městě, na Chlumu a v okolních obcích): výzkum a nezávislé ověření agenty
   (2026-11-10), zdroje v [mista-zdroje.md](mista-zdroje.md).
 
